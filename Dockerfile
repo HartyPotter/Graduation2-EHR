@@ -8,7 +8,7 @@ RUN apt-get update
 WORKDIR /user_service
 
 # Copy the package.json first
-COPY ./package.json /user_service/
+COPY package*.json /user_service
 
 # Install dependecies in a separate layer to make use of Docker layer caching
 RUN npm install --omit=dev
