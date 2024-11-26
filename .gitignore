@@ -1,8 +1,6 @@
 .env
 
 /node_modules
-/config
 /seeders
 
-package.json
 package-lock.json
