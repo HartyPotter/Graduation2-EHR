@@ -35,11 +35,11 @@ jobs:
       - name: Run Docker container with secrets
         run: |
           docker run -d \
-            -e DB_URI=${{ secrets.DB_URI }} \
-            -e JWT_ACCESS_SECRET_KEY=${{ secrets.JWT_ACCESS_SECRET_KEY }} \ 
-            -e JWT_REFRESH_SECRET_KEY= ${{ secrets.JWT_REFRESH_SECRET_KEY }}\
-            -e JWT_RESET_SECRET_KEY=${{ secrets.JWT_RESET_SECRET_KEY }} \
-            -e APP_MAIL=${{ secrets.APP_MAIL }} \
-            -e APP_MAIL_KEY=${{ secrets.APP_MAIL_KEY }}
+            -e DB_URI="${{ secrets.DB_URI }}" \
+            -e JWT_ACCESS_SECRET_KEY="${{ secrets.JWT_ACCESS_SECRET_KEY }}" \
+            -e JWT_REFRESH_SECRET_KEY="${{ secrets.JWT_REFRESH_SECRET_KEY }}" \
+            -e JWT_RESET_SECRET_KEY="${{ secrets.JWT_RESET_SECRET_KEY }}" \
+            -e APP_MAIL="${{ secrets.APP_MAIL }}" \
+            -e APP_MAIL_KEY="${{ secrets.APP_MAIL_KEY }}" \
             -p 3000:3000 \
             $DOCKER_IMAGE_NAME:$IMAGE_TAG
