@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import { prefix } from '../config/config.js';
 import { jwtSecretKey } from '../config/config.js';
 import routes from '../api/routes/routes-index.js';
-import errorMiddleware from '../api/middleware/error-middleware.js';
+import { errorMiddleware } from '../api/middleware/middleware-index.js';
 import passport from '../config/passport.js';
 import * as utils from '../utils/utils-index.js'; 
 // import rateLimiter from '../api/middleware/rate-limiter.js';

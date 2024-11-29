@@ -18,21 +18,21 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        console.log("token payload:", payload.exp * 1000);
-        console.log("Date now", Date.now());
+        console.log(payload);
+
         // Check token expiration
-        if (Date.now() > payload.exp * 1000) return done(new utils.UnauthorizedError({ message: "Token Expired", expired: true }), false);
+        if (Date.now() > payload.exp * 1000) return done(new utils.UnauthorizedError({ message: "Token Expired", expired: true }));
 
         // Find user in db
         const user = await User.findByPk(payload.id);
         
         // If found, return user to callback 
-        if (!user) return done(new utils.NotFoundError("User not found"), false);
+        if (!user) return done(new utils.NotFoundError("User not found"));
 
         // Else, throw not found error
         return done(null, user);
       } catch (error) {
-        return done(new utils.InternalServerError(error.message), false);
+        return done(new utils.InternalServerError(error.message));
       }
     }
   )

@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import { jwtSecretKey, refreshTokenSecretKey, resetSecretKey } from '../../src/config/config.js';
 import { redisClient } from '../loaders/redis-loader.js';
 
-export async function signAccessToken(userId) {
+export async function signAccessToken(userId, role) {
   const accessToken = jwt.sign(
-    { id: userId },
+    { id: userId, role},
     jwtSecretKey,
     {
       expiresIn: '1h',

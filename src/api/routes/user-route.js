@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { register, login, logout, verifyEmail, resendEmail, forgotPassword, resetPassword, refreshToken, changePassword, editUser, getUser, deleteUser } from '../controllers/user-controller-index.js'
-import { authAccessToken } from '../middleware/auth-middleware.js';
+import { register, login, logout, verifyEmail, resendEmail, forgotPassword, resetPassword, refreshToken, changePassword, editUser, getUser, deleteUser } from '../controllers/user-controller-index.js';
+import { authorizeUser, authAccessToken } from '../middleware/middleware-index.js';
 
 const router = Router();
 
@@ -15,9 +15,15 @@ router.post('/reset-password', resetPassword);
 
 router.post('/logout', authAccessToken, logout);
 
-router.get('/protected', authAccessToken, (req, res) => {
-    res.send('This is a protected route. But, you are in !!')
+router.get('/check-authentication', authAccessToken, (req, res) => {
+    res.send({authenticated: true});
 })
+
+router.get('/check-authorization', authAccessToken, authorizeUser, (req, res) => {
+    res.send({authorized: true, role: req.user.role});
+})
+
+router.post('/refreshToken', authAccessToken, refreshToken);
 
 
 // EDIT

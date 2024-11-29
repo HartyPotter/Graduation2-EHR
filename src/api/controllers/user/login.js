@@ -28,7 +28,7 @@ export default async (req, res) => {
     if (!match) throw new utils.ValidationError('Invalid password');
 
     // Generate tokens
-    const accessToken = await utils.signAccessToken(user.id);
+    const accessToken = await utils.signAccessToken(user.id, user.role);
     const refreshToken = await utils.signRefreshToken(user.id);
     
     // Get the user's IP address from the request
