@@ -2,5 +2,5 @@
 
 /node_modules
 /seeders
-
+/config
 package-lock.json
