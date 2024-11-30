@@ -12,6 +12,7 @@ app.listen(port, err => {
     process.exit(1);
   }
   console.log(`Server is running on ${port}`);
+  console.log(`NEW IMAGE`);
 });
 
 export default app
