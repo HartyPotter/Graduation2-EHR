@@ -1,10 +1,10 @@
-import userModel from './user-model.js';
-import tokenModel from './token-model.js';
-import logModel from './log-model.js';
+import Token from './token-model.js';
+import Log from './log-model.js';
+import Doctor from './doctor-model.js';
+import Patient from './patient-model.js';
 
-userModel.hasMany(tokenModel, { foreignKey: 'user_id' });
-tokenModel.belongsTo(userModel, { foreignKey: 'id' });
 
-export const User = userModel;
-export const Token = tokenModel;
-export const Log = logModel;
+Patient.belongsToMany(Contact, { through: 'patient_contacts' });
+Contact.belongsToMany(Patient, { through: 'patient_contacts' });
+
+export { Patient, Doctor,Token, Log };

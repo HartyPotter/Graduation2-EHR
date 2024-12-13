@@ -2,13 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('tokens', {
       id: {
         type: Sequelize.INTEGER,
@@ -17,19 +11,17 @@ module.exports = {
         allowNull: false,
       },
       user_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: 'users', // Assumes the users table exists
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+      },
+      user_type: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       refresh_token: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true, // Enforces unique refresh tokens
+        unique: true,
       },
       expires_in: {
         type: Sequelize.DATE,
@@ -58,16 +50,17 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
+    }, {
+      // Define a composite unique key on user_id and user_type
+      uniqueKeys: {
+        tokens_unique: {
+          fields: ['user_id', 'user_type'],
+        },
+      },
     });
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('tokens');
-  }
-}
+  },
+};

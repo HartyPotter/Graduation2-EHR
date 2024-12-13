@@ -6,14 +6,12 @@ export function validateRegister(body) {
     email: Joi.string().email().min(3).required(),
     password: Joi.string().min(6).max(20).required(),
     full_name: Joi.string().min(3).max(24).required(), // changed from 'name' to 'fullName'
-    // username: Joi.string().min(3).max(15).required(), // added username
     role: Joi.string().valid('patient', 'admin', 'doctor').required(), // added role
     gender: Joi.string().valid('male', 'female').required(), // added gender
     birth_date: Joi.date().required(), // added birthDate
     address: Joi.string().required(), // added address
-    national_id: Joi.string().required(), // added nationalID
+    national_id: Joi.string().length(14).required(), // added nationalID
     photo_url: Joi.string().uri(), // added photoUrl
-    // is_activated: Joi.boolean().default(true), // added isActivated
     is_verified: Joi.boolean().default(false), // added isVerified
   });
   return schema.validate(body);

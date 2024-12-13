@@ -11,14 +11,12 @@ Token.init({
     allowNull: false,
   },
   user_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
-    references: {
-      model: 'users',
-      key: 'id',
-    },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+  },
+  user_type: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   refresh_token: {
     type: DataTypes.STRING,
@@ -48,8 +46,13 @@ Token.init({
   tableName: 'tokens',
   timestamps: true,
   underscored: true,
+  // Define a composite unique key on user_id and user_type
+  uniqueKeys: {
+    tokens_unique: {
+      fields: ['user_id', 'user_type'],
+    },
+  },
 });
-
 
 export default Token;
 

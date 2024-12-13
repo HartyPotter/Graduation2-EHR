@@ -1,8 +1,9 @@
-import { User } from '../../../models/models-index.js';
+import { User, Patient, Doctor } from '../../../models/models-index.js';
 import { validateRegister } from '../../validators/user-validator.js';
 import * as utils from '../../../utils/utils-index.js';
 import { redisClient } from '../../../loaders/redis-loader.js';
 import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 export default async (req, res) => {
   try {
@@ -27,8 +28,14 @@ export default async (req, res) => {
     // Hash the password
     const hashed = await bcrypt.hash(req.body.password, 10);
 
+    // Generate a unique ID for the user
+    const id_prefix = req.body.role === 'patient' ? "PT" : "DR";
+    const id = uuidv4().slice(0, 6);
+    const user_id = `${id_prefix}${id}`;
+
     // Create the new user
     const user = await User.create({
+      id: user_id,
       email: req.body.email,
       full_name: req.body.full_name,
       password: hashed,
@@ -40,6 +47,12 @@ export default async (req, res) => {
       photo_url: req.body.photo_url || 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1200px-Node.js_logo.svg.png',
       is_verified: false,
     });
+
+    if (user.role === 'patient') {
+      await Patient.create({ user_id: user.id });
+    } else {
+      await Doctor.create({ user_id: user.id });
+    }
 
     // Generate email verification code and token
     const emailCode = utils.generateRandomCode(4);
