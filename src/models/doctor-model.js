@@ -83,3 +83,76 @@ Doctor.init(
 );
 
 export default Doctor;
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Doctor:
+ *       type: object
+ *       required:
+ *         - id
+ *         - email
+ *         - full_name
+ *         - password
+ *         - birth_date
+ *         - address
+ *         - national_id
+ *         - specialization
+ *         - license_number
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Unique identifier for the doctor.
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Email address of the doctor.
+ *         full_name:
+ *           type: string
+ *           description: Full name of the doctor.
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: Password for the doctor account.
+ *         gender:
+ *           type: string
+ *           enum: [male, female]
+ *           description: Gender of the doctor.
+ *         birth_date:
+ *           type: string
+ *           format: date
+ *           description: Birth date of the doctor.
+ *         address:
+ *           type: string
+ *           description: Residential address of the doctor.
+ *         national_id:
+ *           type: string
+ *           description: National identification number of the doctor.
+ *         photo_url:
+ *           type: string
+ *           format: uri
+ *           description: URL to the doctor’s profile photo.
+ *         is_verified:
+ *           type: boolean
+ *           default: false
+ *           description: Indicates whether the doctor’s email is verified.
+ *         specialization:
+ *           type: string
+ *           description: Medical specialization of the doctor.
+ *         license_number:
+ *           type: string
+ *           description: Medical license number of the doctor.
+ *         years_of_experience:
+ *           type: integer
+ *           description: Number of years of experience (optional).
+ *         phone_number:
+ *           type: string
+ *           description: Contact phone number of the doctor (optional).
+ *         educational_background:
+ *           type: string
+ *           description: Educational qualifications of the doctor (optional).
+ *         hospital_affiliations:
+ *           type: string
+ *           description: Hospital affiliations of the doctor (optional).
+ */

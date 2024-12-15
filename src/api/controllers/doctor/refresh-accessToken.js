@@ -91,9 +91,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: "Access token refreshed"
@@ -132,9 +132,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "The provided refresh token is invalid or has expired."
@@ -145,9 +145,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "Authentication failed. Please provide a valid token."
@@ -158,9 +158,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "Doctor not found."
@@ -171,9 +171,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "An unexpected error occurred. Please try again later."

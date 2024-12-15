@@ -67,3 +67,63 @@ Patient.init(
 );
 
 export default Patient;
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Patient:
+ *       type: object
+ *       required:
+ *         - id
+ *         - email
+ *         - full_name
+ *         - password
+ *         - birth_date
+ *         - address
+ *         - national_id
+ *         - phone_number
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Unique identifier for the patient.
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Email address of the patient.
+ *         full_name:
+ *           type: string
+ *           description: Full name of the patient.
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: Password for the patient account.
+ *         gender:
+ *           type: string
+ *           enum: [male, female]
+ *           description: Gender of the patient.
+ *         birth_date:
+ *           type: string
+ *           format: date
+ *           description: Birth date of the patient.
+ *         address:
+ *           type: string
+ *           description: Residential address of the patient.
+ *         national_id:
+ *           type: string
+ *           description: National identification number of the patient.
+ *         photo_url:
+ *           type: string
+ *           format: uri
+ *           description: URL to the patient’s profile photo.
+ *         is_verified:
+ *           type: boolean
+ *           default: false
+ *           description: Indicates whether the patient’s email is verified.
+ *         insurance_number:
+ *           type: string
+ *           description: Insurance number of the patient (optional).
+ *         phone_number:
+ *           type: string
+ *           description: Contact phone number of the patient.
+ */

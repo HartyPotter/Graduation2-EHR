@@ -38,12 +38,12 @@ export default async(req, res) => {
 
 /**
  * @swagger
- * /user/resend-email:
+ * /patient/resend-email:
  *   post:
  *     summary: Resend email verification code
  *     description: Resends a new confirmation code to a user’s email if they registered but have not yet verified their account.
  *     tags:
- *       - User AUTH
+ *       - Patient
  *     requestBody:
  *       required: true
  *       content:
@@ -64,9 +64,9 @@ export default async(req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: success
  *                 message:
  *                   type: string
  *                   example: New confirmation code was sent to you, check your mail.
@@ -78,6 +78,28 @@ export default async(req, res) => {
  *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       404:
  *         description: User not found or already verified.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: User not found or already verified.
  *       500:
  *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: An unexpected error occurred. Please try again later.
  */

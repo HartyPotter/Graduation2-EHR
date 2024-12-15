@@ -8,7 +8,7 @@ export default async (req, res) => {
   try {
     // Validate login data
     const { error } = validate.patientLogin(req.body);
-
+    
     if (error) {
       throw new utils.ValidationError(error.details[0].message);
     }
@@ -21,21 +21,21 @@ export default async (req, res) => {
         // is_activated: true,
       },
     });
-
+    
     if (!user) throw new utils.NotFoundError('User not found or not verified');
 
     // Check if password is correct
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) throw new utils.ValidationError('Invalid password');
-
+    
     // Generate tokens
     const accessToken = await utils.signAccessToken(user.id, 'patient');
     const refreshToken = await utils.signRefreshToken(user.id, 'patient');
     
     // Get the user's IP address from the request
     const userIp = req.headers['x-forwarded-for'] || req.ip;
-
-
+    
+    
     // Update the refresh token in the database using Sequelize
     await Token.upsert({
       user_id: user.id,
@@ -46,11 +46,11 @@ export default async (req, res) => {
       created_at: new Date(),
       created_by_ip: userIp, // Add the IP address here
     });
-
+    
     // Remove password from response
     const userData = user.toJSON();
     delete userData.password;
-
+    
     // Add user info and refresh token to Redis for faster access
     await redisClient.hSet(`user:${userData.id}`, {"user": JSON.stringify(userData), "refreshToken": refreshToken});
     await redisClient.expire(`user:${userData.id}`, 2592000);
@@ -74,12 +74,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/login:
+ * /patient/login:
  *   post:
- *     summary: User login
- *     description: Allows a verified and activated user to log in by providing valid credentials.
+ *     summary: Patient Login
+ *     description: Authenticate a verified and activated patient by providing valid credentials.
  *     tags:
- *       - User AUTH
+ *       - Patient
  *     requestBody:
  *       required: true
  *       content:
@@ -90,43 +90,44 @@ export default async (req, res) => {
  *               email:
  *                 type: string
  *                 example: "user@example.com"
- *                 description: The user's email address.
+ *                 description: The email address of the patient.
  *               password:
  *                 type: string
  *                 example: "SecurePassword123!"
- *                 description: The user's password.
+ *                 description: The password of the patient.
+ *             required:  # Specify required fields
+ *               - email
+ *               - password
  *     responses:
  *       200:
- *         description: Login successful, returns user data, access token, and refresh token.
+ *         description: Successfully authenticated the patient and returned user details with tokens.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   enum: [success]  # Use enum for clarity
+ *                   example: "success"
  *                 message:
  *                   type: string
- *                   example: Login successful
+ *                   example: "Login successful"
  *                 data:
  *                   type: object
  *                   properties:
  *                     user:
  *                       type: object
  *                       properties:
- *                         id:
- *                           type: integer
- *                           example: 1
+ *                         id:  # Correct indentation here
+ *                           type: string
+ *                           example: "PT123"
  *                         email:
  *                           type: string
  *                           example: "user@example.com"
  *                         full_name:
  *                           type: string
  *                           example: "John Doe"
- *                         role:
- *                           type: string
- *                           example: "patient"
  *                         gender:
  *                           type: string
  *                           example: "male"
@@ -146,9 +147,12 @@ export default async (req, res) => {
  *                         is_verified:
  *                           type: boolean
  *                           example: true
- *                         is_activated:
- *                           type: boolean
- *                           example: true
+ *                         phone_number:
+ *                           type: string
+ *                           example: "+201023456780"
+ *                         insurance_number:
+ *                            type: string
+ *                            example: "INSC1234"
  *                         createdAt:
  *                           type: string
  *                           format: date-time
@@ -163,12 +167,57 @@ export default async (req, res) => {
  *                     refreshToken:
  *                       type: string
  *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
- *       400:
- *         description: Validation error due to missing or invalid fields.
+ *       400:  # Consistent structure for error responses (status, message)
+ *         description: Missing or invalid fields in the request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   enum: [error]
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid email or password format."
  *       404:
- *         description: User not found or not verified.
+ *         description: Doctor not found or not verified.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Doctor not found or not verified."
  *       403:
- *         description: Invalid password.
+ *         description: Incorrect password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Incorrect password."
  *       500:
- *         description: Server error.
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred. Please try again later."
  */

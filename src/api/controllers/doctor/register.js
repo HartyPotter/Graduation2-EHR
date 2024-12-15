@@ -174,9 +174,6 @@ export default async (req, res) => {
  *                         full_name:
  *                           type: string
  *                           example: John Doe
- *                         role:
- *                           type: string
- *                           example: patient
  *                         gender:
  *                           type: string
  *                           example: male
@@ -195,9 +192,24 @@ export default async (req, res) => {
  *                         is_verified:
  *                           type: boolean
  *                           example: false
- *                     confirmToken:
- *                       type: string
- *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                         specialization:
+ *                           type: string
+ *                           example: "Cardiologist"
+ *                         license_number:
+ *                           type: string
+ *                           example: "LISC123"
+ *                         years_of_experience:
+ *                           type: integer
+ *                           example: 20
+ *                         phone_number:
+ *                           type: string
+ *                           example: "+201234567890"
+ *                         educational_background:
+ *                           type: string
+ *                           example: "Cairo University, Faculty of Medicine"
+ *                         hospital_affiliations:
+ *                           type: string
+ *                           example: "Dr. Ahmed Hospital, Dr. Mohamed Hospital"
  *       400:
  *         description: Validation error in request data.
  *         content:

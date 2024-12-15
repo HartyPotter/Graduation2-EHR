@@ -43,9 +43,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: "Logout successful"
@@ -56,9 +56,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "Access token is missing or invalid."
@@ -69,9 +69,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "An unexpected error occurred. Please try again later."

@@ -103,9 +103,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: "Login successful"
@@ -116,8 +116,8 @@ export default async (req, res) => {
  *                       type: object
  *                       properties:
  *                         id:
- *                           type: integer
- *                           example: 1
+ *                           type: string
+ *                           example: "DR123"
  *                         email:
  *                           type: string
  *                           example: "user@example.com"
@@ -146,9 +146,6 @@ export default async (req, res) => {
  *                         is_verified:
  *                           type: boolean
  *                           example: true
- *                         is_activated:
- *                           type: boolean
- *                           example: true
  *                         createdAt:
  *                           type: string
  *                           format: date-time
@@ -170,9 +167,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "Invalid email or password format."
@@ -183,9 +180,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "Doctor not found or not verified."
@@ -196,9 +193,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "Incorrect password."
@@ -209,9 +206,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  *                 message:
  *                   type: string
  *                   example: "An unexpected error occurred. Please try again later."

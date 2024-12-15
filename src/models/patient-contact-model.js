@@ -35,3 +35,26 @@ const PatientContact = sequelize.define(
 );
 
 export default PatientContact;
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     PatientContact:
+ *       type: object
+ *       required:
+ *         - patient_id
+ *         - contact_id
+ *       properties:
+ *         patient_id:
+ *           type: string
+ *           description: Unique identifier for the patient.
+ *         contact_id:
+ *           type: integer
+ *           description: Unique identifier for the contact.
+ *         is_emergency_contact:
+ *           type: boolean
+ *           default: true
+ *           description: Indicates if the contact is an emergency contact for the patient.
+ */

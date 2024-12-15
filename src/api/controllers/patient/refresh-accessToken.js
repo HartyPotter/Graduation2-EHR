@@ -63,12 +63,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/refresh-token:
+ * /patient/refresh-token:
  *   post:
- *     summary: Refresh user access token
- *     description: Refreshes the access token using a valid refresh token.
+ *     summary: Refresh Access Token
+ *     description: Generates a new access token using a valid refresh token.
  *     tags:
- *       - User AUTH
+ *       - Patient
  *     requestBody:
  *       required: true
  *       content:
@@ -78,8 +78,8 @@ export default async (req, res) => {
  *             properties:
  *               refreshToken:
  *                 type: string
- *                 description: The refresh token provided by the client.
- *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.1FnWsUb3eD36wfnPlpYWlUzf_tg5hr8Ll-ehXg0V5tw"
+ *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 description: The refresh token used to generate a new access token.
  *     responses:
  *       200:
  *         description: Successfully refreshed the access token.
@@ -88,9 +88,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: "Access token refreshed"
@@ -101,8 +101,8 @@ export default async (req, res) => {
  *                       type: object
  *                       properties:
  *                         id:
- *                           type: integer
- *                           example: 1
+ *                           type: string
+ *                           example: "PT1234"
  *                         email:
  *                           type: string
  *                           format: email
@@ -116,20 +116,68 @@ export default async (req, res) => {
  *                         photo_url:
  *                           type: string
  *                           example: "http://example.com/photo.jpg"
+ *                         phone_number:
+ *                           type: string
+ *                           example: "1234567890"
+ *                         insurance_number:
+ *                           type: string
+ *                           example: "INS123456"
  *                     accessToken:
  *                       type: string
- *                       description: The newly generated access token.
- *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.1FnWsUb3eD36wfnPlpYWlUzf_tg5hr8Ll-ehXg0V5tw"
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *                     refreshToken:
  *                       type: string
- *                       description: The refresh token that can be used to refresh the access token again.
- *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.1FnWsUb3eD36wfnPlpYWlUzf_tg5hr8Ll-ehXg0V5tw"
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *       400:
- *         description: Invalid refresh token.
+ *         description: Invalid or expired refresh token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "The provided refresh token is invalid or has expired."
  *       401:
- *         description: Unauthorized. User is not authenticated.
+ *         description: Unauthorized. Authentication failed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication failed. Please provide a valid token."
  *       404:
- *         description: User not found.
+ *         description: Patient not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Patient not found."
  *       500:
- *         description: Server error.
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred. Please try again later."
  */

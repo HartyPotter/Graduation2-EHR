@@ -27,30 +27,52 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/logout:
+ * /patient/logout:
  *   post:
- *     summary: User logout
- *     description: Logs the user out by invalidating the refresh token and removing session data from Redis.
+ *     summary: Patient Logout
+ *     description: Ends the patient's session by invalidating tokens and clearing session data.
  *     tags:
- *       - User AUTH
+ *       - Patient
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: Logout successful.
+ *         description: Successfully logged out the patient.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: "Logout successful"
  *       401:
- *         description: Unauthorized. Access token is missing or invalid.
+ *         description: Unauthorized. Missing or invalid access token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Access token is missing or invalid."
  *       500:
- *         description: Server error.
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred. Please try again later."
  */

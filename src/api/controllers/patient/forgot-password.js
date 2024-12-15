@@ -36,12 +36,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/forgot-password:
+ * /patient/forgot-password:
  *   post:
  *     summary: Request password reset link
  *     description: Generates a reset token and sends an email to the user with a link to reset their password.
  *     tags:
- *       - User EDIT
+ *       - Patient
  *     requestBody:
  *       required: true
  *       content:
@@ -63,16 +63,53 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   enum: [success]
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: "Reset link was sent successfully!"
  *       400:
  *         description: Validation error (e.g., email not provided).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   enum: [error]
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Validation error: email not provided."
  *       404:
  *         description: User with the provided email was not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   enum: [error]
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "No user with this email was found."
  *       500:
  *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   enum: [error]
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error."
  */

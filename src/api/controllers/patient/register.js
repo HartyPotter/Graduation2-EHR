@@ -24,7 +24,7 @@ export default async (req, res) => {
     const exists = await Patient.findOne({ where: { email: req_user.email } });
 
     if (exists) {
-      throw new utils.ConflictError('User with this email already exists');
+      throw new utils.ConflictError('A user with this email already exists');
     }
 
     // Hash the password
@@ -95,12 +95,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/register:
+ * /patient/register:
  *   post:
  *     summary: Register a new user
  *     description: Creates a new user with the provided details and sends a verification code to the user's email.
  *     tags:
- *       - User AUTH
+ *       - Patient
  *     requestBody:
  *       required: true
  *       content:
@@ -108,46 +108,80 @@ export default async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: user@example.com
- *                 description: The user's unique email.
- *               full_name:
- *                 type: string
- *                 example: John Doe
- *                 description: The user's full name.
- *               password:
- *                 type: string
- *                 format: password
- *                 example: StrongPassword123
- *                 description: The user's password.
- *               role:
- *                 type: string
- *                 example: patient
- *                 description: The user's role in the system.
- *               gender:
- *                 type: string
- *                 example: male
- *                 description: The user's gender.
- *               birth_date:
- *                 type: string
- *                 format: date
- *                 example: 1990-01-01
- *                 description: The user's birth date.
- *               address:
- *                 type: string
- *                 example: 123 Main St, Anytown, USA
- *                 description: The user's address.
- *               national_id:
- *                 type: string
- *                 example: A12345678
- *                 description: The user's national ID.
- *               photo_url:
- *                 type: string
- *                 format: uri
- *                 example: https://example.com/photo.jpg
- *                 description: URL to the user's profile photo.
+ *               user:
+ *                 type: object
+ *                 properties:
+ *                   email:
+ *                     type: string
+ *                     format: email
+ *                     example: user@example.com
+ *                     description: The user's unique email.
+ *                   full_name:
+ *                     type: string
+ *                     example: John Doe
+ *                     description: The user's full name.
+ *                   password:
+ *                     type: string
+ *                     format: password
+ *                     example: StrongPassword123
+ *                     description: The user's password.
+ *                   role:
+ *                     type: string
+ *                     example: patient
+ *                     description: The user's role in the system.
+ *                   gender:
+ *                     type: string
+ *                     example: male
+ *                     description: The user's gender.
+ *                   birth_date:
+ *                     type: string
+ *                     format: date
+ *                     example: 1990-01-01
+ *                     description: The user's birth date.
+ *                   address:
+ *                     type: string
+ *                     example: 123 Main St, Anytown, USA
+ *                     description: The user's address.
+ *                   national_id:
+ *                     type: string
+ *                     example: A12345678
+ *                     description: The user's national ID.
+ *                   photo_url:
+ *                     type: string
+ *                     format: uri
+ *                     example: https://example.com/photo.jpg
+ *                     description: URL to the user's profile photo.
+ *                   insurance_number:
+ *                     type: string
+ *                     example: "INS123"
+ *                   phone_number:
+ *                     type: string
+ *                     example: "+201234567890"
+ *               contact:
+ *                 type: object
+ *                 properties:
+ *                   contact_name:
+ *                     type: string
+ *                     example: Jane Doe
+ *                   email:
+ *                     type: string
+ *                     format: email
+ *                     example: jane@examplecom
+ *                   gender:
+ *                     type: string
+ *                     example: female
+ *                   relation_to_patient:
+ *                     type: string
+ *                     example: mother
+ *                   address:
+ *                     type: string
+ *                     example: 456 Elm St, Anytown, USA
+ *                   national_id:
+ *                     type: string
+ *                     example: B12345678
+ *                   phone_number:
+ *                     type: string
+ *                     example: "+201234567890"
  *     responses:
  *       200:
  *         description: Successfully registered the user.
@@ -156,9 +190,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: You registered successfully.
@@ -169,17 +203,14 @@ export default async (req, res) => {
  *                       type: object
  *                       properties:
  *                         id:
- *                           type: integer
- *                           example: 1
+ *                           type: string
+ *                           example: "PT1234"
  *                         email:
  *                           type: string
  *                           example: user@example.com
  *                         full_name:
  *                           type: string
  *                           example: John Doe
- *                         role:
- *                           type: string
- *                           example: patient
  *                         gender:
  *                           type: string
  *                           example: male
@@ -198,13 +229,54 @@ export default async (req, res) => {
  *                         is_verified:
  *                           type: boolean
  *                           example: false
- *                     confirmToken:
- *                       type: string
- *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                         phone_number:
+ *                           type: string
+ *                           example: "+201234567890"
+ *                         insurance_number:
+ *                           type: string
+ *                           example: "INS123"
  *       400:
  *         description: Validation error in request data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Validation error in request data.
+ *                 details:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["Email is required.", "Password must be at least 8 characters."]
  *       409:
  *         description: Conflict error, such as when a user with the given email already exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: A user with this email already exists.
  *       500:
  *         description: Server error.
- */
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: An unexpected error occurred. Please try again later.
+*/

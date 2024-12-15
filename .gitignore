@@ -3,4 +3,5 @@
 /node_modules
 /seeders
 /config
+/refactor_ideas
 package-lock.json

@@ -74,7 +74,7 @@ export default async (req, res) => {
  *               - newPassword
  *               - retypeNewPassword # Explicitly list required fields
  *     responses:
- *       '200':
+ *       200:
  *         description: Password changed successfully.
  *         content:
  *           application/json:
@@ -82,7 +82,7 @@ export default async (req, res) => {
  *               "status": "success",
  *               "message": "Password changed successfully!"
  *             }
- *       '400':
+ *       400:
  *         description: Validation error for missing or non-matching fields.
  *         content:
  *           application/json:
@@ -90,21 +90,21 @@ export default async (req, res) => {
  *               "status": "error",
  *               "message": "New passwords don't match"
  *             }
- *       '403':
+ *       403:
  *         content:
  *           application/json:
  *             example: {
  *               "status": "error",
  *               "message": "Incorrect current password"
  *             }
- *       '404':
+ *       404:
  *         content:
  *           application/json:
  *             example: {
  *               "status": "error",
  *               "message": "No user with this email was found."
  *             }
- *       '500':
+ *       500:
  *         content:
  *           application/json:
  *             example: {
