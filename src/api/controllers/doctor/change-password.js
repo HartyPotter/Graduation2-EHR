@@ -1,74 +1,55 @@
-import { Token, Doctor } from '../../../models/models-index.js';
 import * as utils from '../../../utils/utils-index.js';
+import { Doctor } from '../../../models/models-index.js'
 import * as validate from '../../validators/user-validator.js';
+import bcrypt from "bcrypt";
 
 export default async (req, res) => {
-  try {
-    // validate the presence of refreshToken in the request body
-    const { error } = validate.refreshToken(req.body);
+    try {
+        // Validate that user provided the current passsword
+        const { error } = validate.changePassword(req.body);
+        if (error) throw new utils.ValidationError(error.details[0].message);
     
-    if (error) {
-      throw new utils.ValidationError("Refresh token not provided");
-    }
-
-    const { refreshToken } = req.body
+        // Destrucutre the request body
+        const { currPassword, newPassword, retypeNewPassword } = req.body;
     
-    // Verify the refreshToken
-    const { isValid, id } = await utils.verifyRefreshToken(refreshToken);
+        // Check if user is found and fetch his password
+        let user = await Doctor.findOne({where: { id: req.user.id }});
+        user = user.toJSON();
 
-    if (!isValid) throw new utils.UnauthorizedError("Invalid refresh token, need to login again");
+        if (!user) throw new utils.NotFoundError('No user with this email was found.');
     
-    // Fetch user
-    const user = await Doctor.findByPk(id);
+        // generate token to add to a link to reset the password
+        const match = await bcrypt.compare(currPassword, user.password);
+        if (!match) throw new utils.ForbiddenError("Incorrect current password");
 
-    if (!user) throw new utils.NotFoundError("User not found");
-
-    // Remove password from response
-    const userData = user.toJSON();
-    delete userData.password;
-
-    // Generate new access token and send it back to the client
-    const newAccessToken = await utils.signAccessToken(user.id);
-    const newRefreshToken = await utils.signRefreshToken(user.id);
-
-    // Get the user's IP address from the request
-    const userIp = req.headers['x-forwarded-for'] || req.ip;
-
-    await Token.upsert({
-      user_id: userData.id,
-      refresh_token: refreshToken,
-      valid: true,
-      expires_in: new Date(Date.now() + 4 * 604800000), // 7 days
-      created_at: new Date(),
-      created_by_ip: userIp, // Add the IP address here
-    });
-
-    // Add user info and refresh token to Redis for faster access
-    await redisClient.hSet(`user:${userData.id}`, "user", JSON.stringify(userData), "refreshToken", refreshToken);
-    await redisClient.expire(`user:${userData.id}`, 2592000);
+        if (newPassword !== retypeNewPassword) throw new utils.ValidationError("New password doesn't match");
     
-    return utils.sendSuccess(res, 'Access token refreshed',
-      {
-        user: { ...userData },
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-      }
-    );
-  } catch (error) {
-    console.error('Error in refresh-token controller:', error);
-    return utils.sendError(res, error);
-  }
+        const newHashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update user
+        await Doctor.update({ password: newHashedPassword }, { where: { id: req.user.id } });
+    
+        // Send success email to user
+        await utils.sendPasswordChangeEmail(user.email, user.full_name);
+
+        // Send success response
+        return utils.sendSuccess(res, 'Password changed successfully!');
+    } catch (error) {
+        console.error('Error in change-password controller:', error);
+        return utils.sendError(res, error);
+   }
 };
-
 
 /**
  * @swagger
- * /user/refresh-token:
+ * /doctor/change-password:
  *   post:
- *     summary: Refresh user access token
- *     description: Refreshes the access token using a valid refresh token.
+ *     summary: Change doctor's password
+ *     description: Allows a doctor to change their password by providing the current password and a matching new password.
  *     tags:
- *       - User AUTH
+ *       - Doctor
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -76,60 +57,58 @@ export default async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               refreshToken:
+ *               currPassword:
  *                 type: string
- *                 description: The refresh token provided by the client.
- *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.1FnWsUb3eD36wfnPlpYWlUzf_tg5hr8Ll-ehXg0V5tw"
+ *                 description: The doctor's current password.
+ *                 example: "currentPassword123!"
+ *               newPassword:
+ *                 type: string
+ *                 description: The new password the doctor wishes to set.
+ *                 example: "newSecurePassword456!"
+ *               retypeNewPassword:
+ *                 type: string
+ *                 description: Retyped new password to confirm matching.
+ *                 example: "newSecurePassword456!"
+ *             required:
+ *               - currPassword
+ *               - newPassword
+ *               - retypeNewPassword # Explicitly list required fields
  *     responses:
- *       200:
- *         description: Successfully refreshed the access token.
+ *       '200':
+ *         description: Password changed successfully.
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "Access token refreshed"
- *                 data:
- *                   type: object
- *                   properties:
- *                     user:
- *                       type: object
- *                       properties:
- *                         id:
- *                           type: integer
- *                           example: 1
- *                         email:
- *                           type: string
- *                           format: email
- *                           example: "johndoe@example.com"
- *                         full_name:
- *                           type: string
- *                           example: "John Doe"
- *                         address:
- *                           type: string
- *                           example: "123 Main Street, City, Country"
- *                         photo_url:
- *                           type: string
- *                           example: "http://example.com/photo.jpg"
- *                     accessToken:
- *                       type: string
- *                       description: The newly generated access token.
- *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.1FnWsUb3eD36wfnPlpYWlUzf_tg5hr8Ll-ehXg0V5tw"
- *                     refreshToken:
- *                       type: string
- *                       description: The refresh token that can be used to refresh the access token again.
- *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.1FnWsUb3eD36wfnPlpYWlUzf_tg5hr8Ll-ehXg0V5tw"
- *       400:
- *         description: Invalid refresh token.
- *       401:
- *         description: Unauthorized. User is not authenticated.
- *       404:
- *         description: User not found.
- *       500:
- *         description: Server error.
+ *             example: {
+ *               "status": "success",
+ *               "message": "Password changed successfully!"
+ *             }
+ *       '400':
+ *         description: Validation error for missing or non-matching fields.
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "New passwords don't match"
+ *             }
+ *       '403':
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "Incorrect current password"
+ *             }
+ *       '404':
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "No user with this email was found."
+ *             }
+ *       '500':
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "Incorrect current password"
+ *             }
  */

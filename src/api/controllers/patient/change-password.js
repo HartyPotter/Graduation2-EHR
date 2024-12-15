@@ -42,12 +42,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/change-password:
+ * /patient/change-password:
  *   post:
- *     summary: Change user's password
- *     description: Allows a user to change their password by providing the current password and a matching new password.
+ *     summary: Change patient's password
+ *     description: Allows a patient to change their password by providing the current password and a matching new password.
  *     tags:
- *       - User EDIT
+ *       - Patient
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -59,36 +59,56 @@ export default async (req, res) => {
  *             properties:
  *               currPassword:
  *                 type: string
+ *                 description: The patient's current password.
  *                 example: "currentPassword123!"
- *                 description: The user's current password.
  *               newPassword:
  *                 type: string
+ *                 description: The new password the patient wishes to set.
  *                 example: "newSecurePassword456!"
- *                 description: The new password the user wishes to set.
  *               retypeNewPassword:
  *                 type: string
+ *                 description: Retyped new password to confirm matching.
  *                 example: "newSecurePassword456!"
- *                 description: Retyped password to confirm matching.
+ *             required:
+ *               - currPassword
+ *               - newPassword
+ *               - retypeNewPassword # Explicitly list required fields
  *     responses:
- *       200:
+ *       '200':
  *         description: Password changed successfully.
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Password changed successfully!
- *       400:
+ *             example: {
+ *               "status": "success",
+ *               "message": "Password changed successfully!"
+ *             }
+ *       '400':
  *         description: Validation error for missing or non-matching fields.
- *       403:
- *         description: Current password does not match.
- *       404:
- *         description: User not found.
- *       500:
- *         description: Server error.
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "New passwords don't match"
+ *             }
+ *       '403':
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "Incorrect current password"
+ *             }
+ *       '404':
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "No user with this email was found."
+ *             }
+ *       '500':
+ *         content:
+ *           application/json:
+ *             example: {
+ *               "status": "error",
+ *               "message": "Incorrect current password"
+ *             }
  */

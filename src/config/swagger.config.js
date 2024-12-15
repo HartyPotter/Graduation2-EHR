@@ -30,7 +30,8 @@ export default {
     apis: [
       "src/models/*.js",
       "src/utils/helpers/*.js",
-      "src/api/controllers/user/*.js",
+      "src/api/controllers/doctor/*.js",
+      "src/api/controllers/patient/*.js",
       // "src/api/controllers/user/edit/*.js",
       // "src/api/controllers/user/auth/*.js"
     ]

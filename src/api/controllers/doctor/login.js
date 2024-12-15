@@ -74,12 +74,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/login:
+ * /doctor/login:
  *   post:
- *     summary: User login
- *     description: Allows a verified and activated user to log in by providing valid credentials.
+ *     summary: Doctor Login
+ *     description: Authenticate a verified and activated doctor by providing valid credentials.
  *     tags:
- *       - User AUTH
+ *       - Doctor
  *     requestBody:
  *       required: true
  *       content:
@@ -90,14 +90,14 @@ export default async (req, res) => {
  *               email:
  *                 type: string
  *                 example: "user@example.com"
- *                 description: The user's email address.
+ *                 description: The email address of the doctor.
  *               password:
  *                 type: string
  *                 example: "SecurePassword123!"
- *                 description: The user's password.
+ *                 description: The password of the doctor.
  *     responses:
  *       200:
- *         description: Login successful, returns user data, access token, and refresh token.
+ *         description: Successfully authenticated the doctor and returned user details with tokens.
  *         content:
  *           application/json:
  *             schema:
@@ -108,7 +108,7 @@ export default async (req, res) => {
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Login successful
+ *                   example: "Login successful"
  *                 data:
  *                   type: object
  *                   properties:
@@ -126,7 +126,7 @@ export default async (req, res) => {
  *                           example: "John Doe"
  *                         role:
  *                           type: string
- *                           example: "patient"
+ *                           example: "doctor"
  *                         gender:
  *                           type: string
  *                           example: "male"
@@ -164,11 +164,55 @@ export default async (req, res) => {
  *                       type: string
  *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *       400:
- *         description: Validation error due to missing or invalid fields.
+ *         description: Missing or invalid fields in the request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid email or password format."
  *       404:
- *         description: User not found or not verified.
+ *         description: Doctor not found or not verified.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Doctor not found or not verified."
  *       403:
- *         description: Invalid password.
+ *         description: Incorrect password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Incorrect password."
  *       500:
- *         description: Server error.
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred. Please try again later."
  */

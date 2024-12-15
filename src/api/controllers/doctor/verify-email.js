@@ -42,14 +42,15 @@ export default async (req, res) => {
     }
 };
 
+
 /**
  * @swagger
- * /user/verify-email:
+ * /doctor/verify-email:
  *   post:
- *     summary: Verify a user's email with confirmation code
- *     description: Verifies the user's email by checking a confirmation code and updates the user's verification status.
+ *     summary: Verify user email
+ *     description: Verifies a user's email using a confirmation token sent to their email.
  *     tags:
- *       - User AUTH
+ *       - Doctor
  *     requestBody:
  *       required: true
  *       content:
@@ -60,52 +61,112 @@ export default async (req, res) => {
  *               user:
  *                 type: object
  *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: DRC17C02
  *                   email:
  *                     type: string
- *                     format: email
- *                     example: user@example.com
- *                     description: The user's email to verify.
+ *                     example: doctor@example.com
+ *                   full_name:
+ *                     type: string
+ *                     example: Mark Greyson
+ *                   gender:
+ *                     type: string
+ *                     example: male
+ *                   birth_date:
+ *                     type: string
+ *                     format: date
+ *                     example: 1990-01-01
+ *                   address:
+ *                     type: string
+ *                     example: 123 Main St, Cityville, Country
+ *                   national_id:
+ *                     type: string
+ *                     example: 12345678901234
+ *                   photo_url:
+ *                     type: string
+ *                     example: https://example.com/photo.jpg
+ *                   is_verified:
+ *                     type: boolean
+ *                     example: false
+ *                   specialization:
+ *                     type: string
+ *                     example: Cardiology
+ *                   license_number:
+ *                     type: string
+ *                     example: LSC123
+ *                   years_of_experience:
+ *                     type: integer
+ *                     example: 20
+ *                   phone_number:
+ *                     type: string
+ *                     example: +201023456780
+ *                   educational_background:
+ *                     type: string
+ *                     example: Cairo University, Faculty of Medicine
+ *                   hospital_affiliations:
+ *                     type: string
+ *                     example: Dr. Magdy Yaacoub Heart Center in Aswan
+ *                 description: The user's data.
  *               confirmCode:
  *                 type: string
  *                 example: 1234
- *                 description: The confirmation code sent to the user's email.
+ *                 description: The email verification code sent to the user's email.
  *               confirmToken:
  *                 type: string
  *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *                 description: The JWT token associated with the confirmation code.
+ *                 description: The email verification token sent to the user.
  *     responses:
  *       200:
- *         description: User's email successfully verified.
+ *         description: Email verified successfully.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: success
  *                 message:
  *                   type: string
- *                   example: User verified successfully!
- *                 data:
- *                   type: object
- *                   properties:
- *                     user:
- *                       type: object
- *                       properties:
- *                         email:
- *                           type: string
- *                           example: user@example.com
- *                         full_name:
- *                           type: string
- *                           example: John Doe
- *                         is_verified:
- *                           type: boolean
- *                           example: true
+ *                   example: Email verified successfully.
  *       400:
- *         description: Validation error, such as an expired token or unregistered user.
- *       401:
- *         description: Unauthorized error if the confirmation code doesn't match.
+ *         description: Invalid or expired token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Invalid or expired token.
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: User not found.
  *       500:
  *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: An unexpected error occurred. Please try again later.
  */

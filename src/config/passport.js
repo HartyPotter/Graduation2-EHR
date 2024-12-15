@@ -32,12 +32,13 @@ passport.use(
           user = await Doctor.findByPk(payload.id);
           user.role = 'doctor';
         }
-        
+        const userData = user.dataValues;
+        delete userData.password;
         // If found, return user to callback 
         if (!user) return done(new utils.NotFoundError("User not found"));
 
         // Else, throw not found error
-        return done(null, {user, role: payload.role});
+        return done(null, { userData, role: payload.role });
       } catch (error) {
         return done(new utils.InternalServerError(error.message));
       }

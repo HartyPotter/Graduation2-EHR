@@ -49,19 +49,19 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/reset-password:
+ * /doctor/reset-password:
  *   post:
- *     summary: Reset user's password
- *     description: Allows a user to reset their password by providing a valid token and matching new passwords.
+ *     summary: Reset user password
+ *     description: Allows a user to reset their password by providing the reset token and the new password.
  *     tags:
- *       - User EDIT
+ *       - Doctor
  *     parameters:
- *       - in: query
- *         name: token
- *         schema:
- *           type: string
- *         required: true
- *         description: The password reset token sent to the user's email.
+ *      - in: query
+ *        name: token
+ *        required: true
+ *        schema:
+ *         type: string
+ *         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *     requestBody:
  *       required: true
  *       content:
@@ -69,14 +69,11 @@ export default async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               newPassword:
+ *               new_password:
  *                 type: string
- *                 example: "newStrongPassword123!"
- *                 description: The new password the user wishes to set.
- *               retypeNewPassword:
- *                 type: string
- *                 example: "newStrongPassword123!"
- *                 description: Retyped password to confirm matching.
+ *                 format: password
+ *                 example: NewStrongPassword123
+ *                 description: The new password for the user.
  *     responses:
  *       200:
  *         description: Password reset successfully.
@@ -85,16 +82,49 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: success
  *                 message:
  *                   type: string
- *                   example: Password was reset successfully!
+ *                   example: Password reset successfully.
  *       400:
- *         description: Validation error for missing or non-matching fields.
- *       403:
- *         description: Reset token is invalid or user has not requested password reset.
+ *         description: Validation error or invalid token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Invalid reset token or password does not meet requirements.
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: User not found.
  *       500:
  *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: An unexpected error occurred. Please try again later.
  */

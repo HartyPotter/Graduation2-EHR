@@ -27,17 +27,17 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/logout:
+ * /doctor/logout:
  *   post:
- *     summary: User logout
- *     description: Logs the user out by invalidating the refresh token and removing session data from Redis.
+ *     summary: Doctor Logout
+ *     description: Ends the doctor's session by invalidating tokens and clearing session data.
  *     tags:
- *       - User AUTH
+ *       - Doctor
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: Logout successful.
+ *         description: Successfully logged out the doctor.
  *         content:
  *           application/json:
  *             schema:
@@ -50,7 +50,29 @@ export default async (req, res) => {
  *                   type: string
  *                   example: "Logout successful"
  *       401:
- *         description: Unauthorized. Access token is missing or invalid.
+ *         description: Unauthorized. Missing or invalid access token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Access token is missing or invalid."
  *       500:
- *         description: Server error.
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred. Please try again later."
  */

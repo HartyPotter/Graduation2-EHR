@@ -73,12 +73,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/register:
+ * /doctor/register:
  *   post:
  *     summary: Register a new user
  *     description: Creates a new user with the provided details and sends a verification code to the user's email.
  *     tags:
- *       - User AUTH
+ *       - Doctor
  *     requestBody:
  *       required: true
  *       content:
@@ -126,6 +126,25 @@ export default async (req, res) => {
  *                 format: uri
  *                 example: https://example.com/photo.jpg
  *                 description: URL to the user's profile photo.
+ *               specialization:
+ *                 type: string
+ *                 example: "Cardiologist"
+ *                 description: The doctos's specialization.
+ *               license_number:
+ *                 type: string
+ *                 example: "LISC123"
+ *               years_of_experience:
+ *                 type: integer
+ *                 example: 20
+ *               phone_number:
+ *                 type: string
+ *                 example: "+201234567890"
+ *               educational_background:
+ *                 type: string
+ *                 example: "Cairo University, Faculty of Medicine"
+ *               hospital_affiliations:
+ *                 type: string
+ *                 example: "Dr. Ahmed Hospital, Dr. Mohamed Hospital"
  *     responses:
  *       200:
  *         description: Successfully registered the user.
@@ -134,9 +153,9 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: You registered successfully.
@@ -181,8 +200,46 @@ export default async (req, res) => {
  *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       400:
  *         description: Validation error in request data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Validation error in request data.
+ *                 details:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["Email is required.", "Password must be at least 8 characters."]
  *       409:
  *         description: Conflict error, such as when a user with the given email already exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: A user with this email already exists.
  *       500:
  *         description: Server error.
- */
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: An unexpected error occurred. Please try again later.
+*/

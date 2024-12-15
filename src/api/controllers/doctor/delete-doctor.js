@@ -26,12 +26,12 @@ export default async (req, res) => {
 
 /**
  * @swagger
- * /user/delete-user:
+ * /doctor/delete:
  *   delete:
  *     summary: Delete user account
  *     description: Deletes the authenticated user's account, removes associated tokens, and clears session data from Redis.
  *     tags:
- *       - User EDIT
+ *       - Doctor
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -42,16 +42,49 @@ export default async (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: string
+ *                   example: "success"
  *                 message:
  *                   type: string
  *                   example: "User deleted successfully!"
  *       401:
  *         description: Unauthorized. Access token is missing or invalid.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized"
  *       404:
  *         description: User not found.
+ *         content: # Added content for 404 response
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "User not found"            
  *       500:
- *         description: Server error.
+ *         description: Internal server error.
+ *         content: # Added content for 500 response
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
  */

@@ -28,9 +28,9 @@ router.post('/refreshToken', authAccessToken, refreshToken);
 
 // EDIT
 router.post('/change-password', authAccessToken, changePassword);
-router.put('/edit-doctor', authAccessToken, editDoctor);
+router.patch('/edit', authAccessToken, editDoctor);
 
-router.get('/get-doctor', authAccessToken, getDoctor);
-router.delete('/delete-doctor', authAccessToken, deleteDoctor);
+router.get('/get', authAccessToken, getDoctor);
+router.delete('/delete', authAccessToken, deleteDoctor);
 
 export default router
