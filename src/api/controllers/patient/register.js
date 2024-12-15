@@ -1,65 +1,80 @@
-import { User, Patient, Doctor } from '../../../models/models-index.js';
-import { validateRegister } from '../../validators/user-validator.js';
+import { Patient, Contact, PatientContact} from '../../../models/models-index.js';
+import * as validate from '../../validators/user-validator.js';
 import * as utils from '../../../utils/utils-index.js';
 import { redisClient } from '../../../loaders/redis-loader.js';
 import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 
 export default async (req, res) => {
   try {
     // Validate user input
-    const { error } = validateRegister(req.body);
-    if (error) {
-      let errorDetail = 'Validation error';
-      if (error.details[0].message.includes('email')) errorDetail = 'Invalid email format';
-      else if (error.details[0].message.includes('password')) errorDetail = 'Invalid password format';
-      else if (error.details[0].message.includes('full_name')) errorDetail = 'Full name is required';
+    const { user: req_user, contact: req_contact } = req.body;
 
-      throw new utils.ValidationError(errorDetail);
+    const { user_error } = validate.patientRegister(req_user);
+    const { contact_error } = validate.emergencyContactInfo(req_contact);
+
+    if (user_error) {
+      throw new utils.ValidationError(user_error.details[0].message);
+    }
+    
+    if (contact_error) { 
+      throw new utils.ValidationError(contact_error.details[0].message);
     }
 
     // Check if user already exists by email
-    const exists = await User.findOne({ where: { email: req.body.email } });
+    const exists = await Patient.findOne({ where: { email: req_user.email } });
 
     if (exists) {
       throw new utils.ConflictError('User with this email already exists');
     }
 
     // Hash the password
-    const hashed = await bcrypt.hash(req.body.password, 10);
+    const hashed = await bcrypt.hash(req_user.password, 10);
 
     // Generate a unique ID for the user
-    const id_prefix = req.body.role === 'patient' ? "PT" : "DR";
-    const id = uuidv4().slice(0, 6);
-    const user_id = `${id_prefix}${id}`;
+    const user_id = utils.generateUserId('patient', req_user.national_id);
 
     // Create the new user
-    const user = await User.create({
+    const user = await Patient.create({
       id: user_id,
-      email: req.body.email,
-      full_name: req.body.full_name,
+      email: req_user.email,
+      full_name: req_user.full_name,
       password: hashed,
-      role: req.body.role || 'patient', // Default role
-      gender: req.body.gender,
-      birth_date: req.body.birth_date,
-      address: req.body.address,
-      national_id: req.body.national_id,
-      photo_url: req.body.photo_url || 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1200px-Node.js_logo.svg.png',
+      role: req_user.role, // Default role
+      gender: req_user.gender,
+      birth_date: req_user.birth_date,
+      address: req_user.address,
+      national_id: req_user.national_id,
+      insurance_number: req_user.insurance_number || null,
+      phone_number: req_user.phone_number,
+      photo_url: req_user.photo_url || 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1200px-Node.js_logo.svg.png',
       is_verified: false,
     });
 
-    if (user.role === 'patient') {
-      await Patient.create({ user_id: user.id });
-    } else {
-      await Doctor.create({ user_id: user.id });
-    }
+    // Create the emergency contact
+    const contact = await Contact.create({
+      contact_name: req_contact.contact_name,
+      email: req_contact.email,
+      gender: req_contact.gender,
+      relation_to_patient: req_contact.relation_to_patient,
+      address: req_contact.address,
+      national_id: req_contact.national_id,
+      phone_number: req_contact.phone_number,
+    });
+
+    // Create a relationship between the user and the contact
+
+    await PatientContact.create({  
+      patient_id: user.id,
+      contact_id: contact.id,
+      is_emergency_contact: true,
+    });
 
     // Generate email verification code and token
     const emailCode = utils.generateRandomCode(4);
-    const confirmCodeToken = await utils.signConfirmCodeToken(user.id, user.email, emailCode);
+    const confirmCodeToken = await utils.signConfirmCodeToken(user.id, req_user.email, emailCode);
     
     // Send verification email 
-    await utils.sendVerificationEmail(req.body.email, req.body.full_name, emailCode, 'register');
+    await utils.sendVerificationEmail(req_user.email, req_user.full_name, emailCode, 'register');
     
     // Save the signed confirmation code in redis
     await redisClient.set(`confirmCode:${user.email}`, confirmCodeToken, { 'EX': 300 });

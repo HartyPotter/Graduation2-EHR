@@ -1,5 +1,5 @@
-import { User, Token } from '../../../models/models-index.js';
-import { validateLogin } from '../../validators/user-validator.js';
+import { Doctor, Token } from '../../../models/models-index.js';
+import * as validate from '../../validators/user-validator.js';
 import * as utils from '../../../utils/utils-index.js'
 import bcrypt from 'bcrypt';
 import { redisClient } from '../../../loaders/redis-loader.js';
@@ -7,17 +7,18 @@ import { redisClient } from '../../../loaders/redis-loader.js';
 export default async (req, res) => {
   try {
     // Validate login data
-    const { error } = validateLogin(req.body);
+    const { error } = validate.doctorLogin(req.body);
+
     if (error) {
       throw new utils.ValidationError(error.details[0].message);
     }
 
     // Find the user in the database
-    const user = await User.findOne({
+    const user = await Doctor.findOne({
       where: {
         email: req.body.email,
         is_verified: true,
-        is_activated: true,
+        // is_activated: true,
       },
     });
 
@@ -28,17 +29,17 @@ export default async (req, res) => {
     if (!match) throw new utils.ValidationError('Invalid password');
 
     // Generate tokens
-    const accessToken = await utils.signAccessToken(user.id, user.role);
-    const refreshToken = await utils.signRefreshToken(user.id);
+    const accessToken = await utils.signAccessToken(user.id, 'doctor');
+    const refreshToken = await utils.signRefreshToken(user.id, 'doctor');
     
     // Get the user's IP address from the request
     const userIp = req.headers['x-forwarded-for'] || req.ip;
 
-    //
 
     // Update the refresh token in the database using Sequelize
     await Token.upsert({
       user_id: user.id,
+      user_type: "doctor",
       refresh_token: refreshToken,
       valid: true,
       expires_in: new Date(Date.now() + 4 * 604800000), // 7 days

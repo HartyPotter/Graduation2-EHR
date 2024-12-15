@@ -1,16 +1,14 @@
 import * as utils from '../../../utils/utils-index.js';
-import { User } from '../../../models/models-index.js'
-
-const allowedFields = ['full_name', 'email', 'address', 'photo_url'];
+import { Doctor } from '../../../models/models-index.js'
 
 export default async (req, res) => {
     try {        
         // Check if user exist
-        const user = await User.findOne({ where: { id: req.user.id } });
+        const user = await Doctor.findOne({ where: { id: req.user.id } });
         if (!user) throw new utils.NotFoundError("User not found");
 
         // Remove user from database
-        await User.destroy({ where: { id: req.user.id } });
+        await Doctor.destroy({ where: { id: req.user.id } });
 
         // Remove user's tokens
         await utils.revokeUserRedisLogin(req.user.id);

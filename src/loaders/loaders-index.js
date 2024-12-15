@@ -6,6 +6,8 @@ export default async (app) => {
   try {
     await sequelize.authenticate();
     console.log('Database connection has been established successfully.');
+    // await sequelize.sync({ alter: true }); // Use alter: true to modify existing tables
+    // console.log('All models were synchronized successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

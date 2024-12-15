@@ -1,8 +1,7 @@
 import { redisClient } from '../../../loaders/redis-loader.js';
-import { User } from '../../../models/models-index.js';
+import { Doctor } from '../../../models/models-index.js';
 import * as utils from '../../../utils/utils-index.js';
 import { jwtSecretKey } from '../../../config/config.js';
-import jwt from 'jsonwebtoken';
 
 export default async(req, res) => {
     try {
@@ -10,7 +9,7 @@ export default async(req, res) => {
         const { email } = req.body;
 
         // check if user registered but not verified
-        const user = await User.findOne({where: { email , is_verified: false}});
+        const user = await Doctor.findOne({where: { email , is_verified: false}});
 
         if (!user) throw new utils.NotFoundError('User not found or already verified, make sure you register first.');
         
@@ -22,7 +21,7 @@ export default async(req, res) => {
         const newConfirmToken = await utils.signConfirmCodeToken(jwtSecretKey, email, newConfirmCode);
 
         // Update redis with the newly generated code
-        const result = await redisClient.set(`confirmCode:${email}`, newConfirmToken, { 'EX': 300 });
+        await redisClient.set(`confirmCode:${email}`, newConfirmToken, { 'EX': 300 });
 
         // // Check if an error happened during redis update
         // if (result !== "OK") throw new utils.InternalServerError("Couldn't generate ");

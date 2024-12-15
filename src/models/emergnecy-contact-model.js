@@ -8,27 +8,33 @@ Contact.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
-    },
-    user_id: {
-      type: DataTypes.STRING,
-      references: {
-        model: "Patients",
-        key: 'id'
-    },
-      unique: true,
-      onDelete: 'CASCADE'
+      autoIncrement: true,
     },
     contact_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
     gender: {
       type: DataTypes.ENUM('male', 'female'),
+      allowNull: false,
     },
     relation_to_patient: {
-        type: String.ENUM("Mother", "Father", "Sibling", "Son", "Daughter", "Spouse", "Friend", "Family Member"),
-        allowNull: false
+      type: DataTypes.ENUM(
+        "Mother",
+        "Father",
+        "Sibling",
+        "Son",
+        "Daughter",
+        "Spouse",
+        "Friend",
+        "Family Member"
+      ),
+      allowNull: false,
     },
     address: {
       type: DataTypes.STRING,
@@ -47,7 +53,7 @@ Contact.init(
   {
     sequelize,
     modelName: 'Contact',
-    tableName: 'Contactss',
+    tableName: 'contacts',
     timestamps: true,
     underscored: true,
   }

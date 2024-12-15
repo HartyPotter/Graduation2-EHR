@@ -1,7 +1,7 @@
 import * as utils from '../../../utils/utils-index.js';
-import { User } from '../../../models/models-index.js'
+import { Patient } from '../../../models/models-index.js'
 import bcrypt from 'bcrypt';
-import { validateResetPassword } from '../../validators/user-validator.js';
+import * as validate from '../../validators/user-validator.js';
 import { redisClient } from '../../../loaders/redis-loader.js';
 import { resetSecretKey } from '../../../config/config.js';
 import jwt from 'jsonwebtoken';
@@ -9,11 +9,10 @@ import jwt from 'jsonwebtoken';
 export default async (req, res) => {
     try {
         // Validate that user provided the new passsword
-        const { error } = validateResetPassword(req.body);
+        const { error } = validate.forgotPassword(req.body);
 
         if (error) {
-            if (error.details[0].message.includes('newPassword')) throw new utils.ValidationError(null, "Please enter a new password");
-            if (error.details[0].message.includes('retypeNewPassword')) throw new utils.ValidationError(null, "Please retype the new password");
+            throw new utils.ValidationError(error.details[0].message);
         }
         
         // Destrucutre the request body
@@ -33,7 +32,7 @@ export default async (req, res) => {
         // Update user in database with hashed new password
         const hashNewPassword = await bcrypt.hash(newPassword, 10);
 
-        const updatedUser = await User.update({ password: hashNewPassword }, { where: { email: payload.email }, returning: true });
+        const updatedUser = await Patient.update({ password: hashNewPassword }, { where: { email: payload.email }, returning: true });
 
         // Clear redis from reset token
         await redisClient.del(`reset:${payload.email}`);

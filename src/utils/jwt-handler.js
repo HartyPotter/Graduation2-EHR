@@ -16,9 +16,9 @@ export async function signAccessToken(userId, role) {
 };
 
 
-export async function signRefreshToken(userId) {
+export async function signRefreshToken(userId, role) {
   const refreshToken = jwt.sign(
-    { id: userId },
+    { id: userId, role },
     refreshTokenSecretKey,
     {
       expiresIn: '30d',
@@ -61,18 +61,24 @@ export async function verifyRefreshToken(refreshToken) {
     const decoded = jwt.verify(refreshToken, refreshTokenSecretKey);
 
     // Retrieve the stored refresh token from Redis
-    const storedToken = await redisClient.get(`user:${decoded.id}`, 'refreshToken');
+    const storedToken = await redisClient.hGet(`user:${decoded.id}`, 'refreshToken');
+    console.log("stored Token: ")
+    console.log(storedToken);
+
+    console.log("refresh Token: ")
+    console.log(refreshToken);
 
     // If token is not found or invalid, return false
-    if (!storedToken || storedToken !== refreshToken) {
-      return { valid: false, id: null };
+    if (!storedToken || storedToken != refreshToken) {
+      return { isValid: false, id: null };
+      // console.log("refreshToken donest equal storedToken")
     }
 
     // If everything is valid, return the decoded user ID
-    return { valid: true, id: decoded.id };
+    return { isValid: true, id: decoded.id };
   } catch (error) {
     console.error('Error verifying refresh token:', error);
-    return { valid: false, id: null };
+    return { isValid: false, id: null };
   }
 }
 

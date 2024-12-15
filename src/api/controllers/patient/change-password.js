@@ -1,25 +1,19 @@
 import * as utils from '../../../utils/utils-index.js';
-import { User } from '../../../models/models-index.js'
-import { validateChangePassword } from '../../validators/user-validator.js';
+import { Patient } from '../../../models/models-index.js'
+import * as validate from '../../validators/user-validator.js';
 import bcrypt from "bcrypt";
 
 export default async (req, res) => {
     try {
         // Validate that user provided the current passsword
-        const { error } = validateChangePassword(req.body);
-        if (error) {
-            let errorDetail = 'Joi Validation error';
-            if (error.details[0].message.includes('currPassword')) errorDetail = "Please provide the current password";
-            if (error.details[0].message.includes('newPassword')) errorDetail = "Please provide the new password";
-            if (error.details[0].message.includes('retypeNewPassword')) errorDetail = "Please retype the new password";
-            throw new utils.ValidationError(errorDetail);
-        };
+        const { error } = validate.changePassword(req.body);
+        if (error) throw new utils.ValidationError(error.details[0].message);
     
         // Destrucutre the request body
         const { currPassword, newPassword, retypeNewPassword } = req.body;
     
         // Check if user is found and fetch his password
-        let user = await User.findOne({where: { id: req.user.id }});
+        let user = await Patient.findOne({where: { id: req.user.id }});
         user = user.toJSON();
 
         if (!user) throw new utils.NotFoundError('No user with this email was found.');
@@ -33,7 +27,7 @@ export default async (req, res) => {
         const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Update user
-        await User.update({ password: newHashedPassword }, { where: { id: req.user.id } });
+        await Patient.update({ password: newHashedPassword }, { where: { id: req.user.id } });
     
         // Send success email to user
         await utils.sendPasswordChangeEmail(user.email, user.full_name);

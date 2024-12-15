@@ -49,21 +49,23 @@ module.exports = {
       insurance_number: {
         type: Sequelize.STRING,
         allowNull: true,
+        unique: true,
       },
       phone_number: {
         type: Sequelize.STRING,
-        allowNull: true,
-      },
-      created_at: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        unique: true,
       },
-      updated_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
-      },
+      // created_at: {
+      //   type: Sequelize.DATE,
+      //   allowNull: false,
+      //   defaultValue: Sequelize.NOW,
+      // },
+      // updated_at: {
+      //   type: Sequelize.DATE,
+      //   allowNull: false,
+      //   defaultValue: Sequelize.NOW,
+      // },
     });
   },
 

@@ -47,26 +47,14 @@ Patient.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    medical_history: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
     insurance_number: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     phone_number: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    emergency_contact: {
-      type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "Contacts",
-        key: 'id'
-      },
-      onDelete: 'CASCADE'
+      unique: true,
     },
   },
   {

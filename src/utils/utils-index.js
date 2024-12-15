@@ -3,3 +3,4 @@ export { BaseError, NotFoundError, ValidationError, UnauthorizedError, Forbidden
 export { sendSuccess, sendError } from './response-handler.js'
 export { signAccessToken, signRefreshToken, signResetToken, signConfirmCodeToken, revokeUserRedisLogin, verifyRefreshToken } from './jwt-handler.js'
 export { generateRandomCode } from './generate-random-code.js'
+export { generateUserId } from './generate-user-id.js'

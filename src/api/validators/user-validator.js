@@ -1,89 +1,140 @@
 import Joi from 'joi';
+import joi_phone_number from 'joi-phone-number';
+const joi = Joi.extend(joi_phone_number);
 
-export function validateRegister(body) {
-  const schema = Joi.object({
-    id: Joi.number(),
-    email: Joi.string().email().min(3).required(),
-    password: Joi.string().min(6).max(20).required(),
-    full_name: Joi.string().min(3).max(24).required(), // changed from 'name' to 'fullName'
-    role: Joi.string().valid('patient', 'admin', 'doctor').required(), // added role
-    gender: Joi.string().valid('male', 'female').required(), // added gender
-    birth_date: Joi.date().required(), // added birthDate
-    address: Joi.string().required(), // added address
-    national_id: Joi.string().length(14).required(), // added nationalID
-    photo_url: Joi.string().uri(), // added photoUrl
-    is_verified: Joi.boolean().default(false), // added isVerified
+export function patientRegister(body) {
+  const schema = joi.object({
+    email: joi.string().email().min(3).required(),
+    full_name: joi.string().min(3).max(24).required(),
+    password: joi.string().min(6).max(20).required(),
+    gender: joi.string().valid('male', 'female').required(),
+    birth_date: joi.date().required(),
+    address: joi.string().required(),
+    national_id: joi.string().length(14).required(),
+    photo_url: joi.string().uri(),
+    insurance_number: joi.string(),
+    phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' }),
   });
   return schema.validate(body);
 }
 
-export function validateLogin(body) {
-  const schema = Joi.object({
-    email: Joi.string().email().min(3).required(),
-    password: Joi.string().min(6).max(20).required()
+export function emergencyContactInfo(body) {
+  const schema = joi.object({
+    contact_name: joi.string().min(3).max(24).required(),
+    email: joi.string().email().min(3).required(),
+    gender: joi.string().valid('male', 'female').required(),
+    address: joi.string().required(),
+    national_id: joi.string().length(14).required(),
+    phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' }),
   });
   return schema.validate(body);
 }
 
-export function validateSendVerificationCode(body) {
-  const schema = Joi.object({
-    email: Joi.string().email().min(3).required()
+export function doctorRegister(body) {
+  const schema = joi.object({
+    email: joi.string().email().min(3).required(),
+    full_name: joi.string().min(3).max(24).required(),
+    password: joi.string().min(6).max(20).required(),
+    gender: joi.string().valid('male', 'female').required(),
+    birth_date: joi.date().required(),
+    address: joi.string().required(),
+    national_id: joi.string().length(14).required(),
+    photo_url: joi.string().uri(),
+    specialization: joi.string().required(),
+    license_number: joi.string().required(),
+    years_of_experience: joi.number().required(),
+    phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' }).required(),
+    educational_background: joi.string().required(),
+    hospital_affiliations: joi.string().required()
   });
   return schema.validate(body);
 }
 
-export function validateVerifyEmail(body) {
-  const schema = Joi.object({
-    token: Joi.string().min(10).required(),
-    code: Joi.string().length(4).required()
+export function patientLogin(body) {
+  const schema = joi.object({
+    email: joi.string().email().min(3).required(),
+    password: joi.string().min(6).max(20).required()
   });
   return schema.validate(body);
 }
 
-export function validateRefreshToken(body) {
-  const schema = Joi.object({
-    refreshToken: Joi.string().min(10).required()
+export function doctorLogin(body) {
+  const schema = joi.object({
+    email: joi.string().email().min(3).required(),
+    password: joi.string().min(6).max(20).required()
   });
   return schema.validate(body);
 }
 
-export function validateForgotPassword(body) {
-  const schema = Joi.object({
-    email: Joi.string().min(3).required()
+export function sendVerificationCode(body) {
+  const schema = joi.object({
+    email: joi.string().email().min(3).required()
   });
   return schema.validate(body);
 }
 
-export function validateChangePassword(body) {
-  const schema = Joi.object({
-    currPassword: Joi.string().min(6).max(20).required(),
-    newPassword: Joi.string().min(6).max(20).required(),
-    retypeNewPassword: Joi.string().min(6).max(20).required()
+export function verifyEmail(body) {
+  const schema = joi.object({
+    token: joi.string().min(10).required(),
+    code: joi.string().length(4).required()
   });
   return schema.validate(body);
 }
 
-export function validateResetPassword(body) {
-  const schema = Joi.object({
-    newPassword: Joi.string().min(6).max(20).required(),
-    retypeNewPassword: Joi.string().min(6).max(20).required()
+export function refreshToken(body) {
+  const schema = joi.object({
+    refreshToken: joi.string().min(10).required()
   });
   return schema.validate(body);
 }
 
-export function validateEditUser(body) {
-  const schema = Joi.object({
-    full_name: Joi.string().min(3).max(24),
-    email: Joi.string().min(3).max(20),
-    // username: Joi.string().min(3).max(15),
-    // role: Joi.string().valid('patient', 'admin', 'doctor'),
-    // gender: Joi.string().valid('male', 'female'), // updated to match schema
-    // birth_date: Joi.date(),
-    address: Joi.string(),
-    // national_id: Joi.string(),
-    photo_url: Joi.string().uri(),
-    // is_activated: Joi.boolean(),
-    // is_verified: Joi.boolean(),
+export function forgotPassword(body) {
+  const schema = joi.object({
+    email: joi.string().min(3).required()
+  });
+  return schema.validate(body);
+}
+
+export function changePassword(body) {
+  const schema = joi.object({
+    currPassword: joi.string().min(6).max(20).required(),
+    newPassword: joi.string().min(6).max(20).required(),
+    retypeNewPassword: joi.string().min(6).max(20).required()
+  });
+  return schema.validate(body);
+}
+
+export function resetPassword(body) {
+  const schema = joi.object({
+    newPassword: joi.string().min(6).max(20).required(),
+    retypeNewPassword: joi.string().min(6).max(20).required()
+  });
+  return schema.validate(body);
+}
+
+export function editPatient(body) {
+  const schema = joi.object({
+    email: joi.string().email().min(3),
+    full_name: joi.string().min(3).max(24),
+    birth_date: joi.date(),
+    address: joi.string(),
+    photo_url: joi.string().uri(),
+    insurance_number: joi.string(),
+    phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' })
+  });
+  return schema.validate(body);
+}
+
+export function editDoctor(body) {
+  const schema = joi.object({
+    email: joi.string().email().min(3),
+    full_name: joi.string().min(3).max(24),
+    birth_date: joi.date(),
+    address: joi.string(),
+    photo_url: joi.string().uri(),
+    years_of_experience: joi.string(),
+    phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' }),
+    hospital_affiliations: joi.string()
   });
   return schema.validate(body);
 }

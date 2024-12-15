@@ -1,10 +1,10 @@
 import { jwtSecretKey } from "../../../config/config.js";
 import { redisClient } from "../../../loaders/redis-loader.js";
-import { User } from "../../../models/models-index.js";
+import { Doctor } from "../../../models/models-index.js";
 import * as utils from '../../../utils/utils-index.js';
 import jwt from 'jsonwebtoken'
 
-export default async (req, res, next) => {
+export default async (req, res) => {
     try {
         // Extract confirmation code and token
         const { user, confirmCode, confirmToken } = req.body;
@@ -23,16 +23,19 @@ export default async (req, res, next) => {
         if (payload.code != confirmCode) throw new utils.UnauthorizedError("Confirmation code sent didn't match the assigned one");
         
         // Update the user's status
-        await User.update({ is_verified: true }, { where: { email: user.email } });
+        const [rows, [updatedUser]] = await Doctor.update({ is_verified: true }, { where: { email: user.email }, returning: true });
 
-        // Updated user status and send it to the client app
-        user.is_verified = true;
+        if (rows == 0) throw new utils.ValidationError("User not updated");
+        if (!updatedUser) throw new utils.ValidationError("User not found after update");
+        
+        const userData = updatedUser.dataValues;
+        delete userData.password;
 
         // Send Welcome email to user
         utils.sendWelcomeEmail(user.email, user.full_name);
 
         // Send success message
-        return utils.sendSuccess(res, "User verified successfully!", {user});
+        return utils.sendSuccess(res, "User verified successfully!", userData);
     } catch (error) {
         console.error('Error in verify email controller:', error);
         return utils.sendError(res, error);

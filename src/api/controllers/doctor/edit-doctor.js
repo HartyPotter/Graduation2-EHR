@@ -1,37 +1,41 @@
 import * as utils from '../../../utils/utils-index.js';
-import { User } from '../../../models/models-index.js'
-import { validateEditUser } from '../../validators/user-validator.js';
+import { Doctor } from '../../../models/models-index.js'
+import * as validate from '../../validators/user-validator.js';
 import { BaseError } from 'sequelize';
 import { redisClient } from '../../../loaders/redis-loader.js';
 
-const allowedFields = ['full_name', 'email', 'address', 'photo_url'];
+const allowedFields = ['email', 'full_name', 'birth_date', 'address', 'photo_url', 'years_of_experience', 'phone_number', 'hospital_affiliations'];
 
 export default async (req, res) => {
     try {
         // Validate that user provided valid data
-        const { error } = validateEditUser(req.body);
-        if (error) throw new utils.ValidationError(error.details.map(detail => detail.message).join(', '));
+        const { error } = validate.editDoctor(req.body);
+        if (error) throw new utils.ValidationError(error.details[0].message);
 
         // Destructure the request body
-        const { full_name, email, address, photo_url } = req.body;
+        const { email, full_name, birth_date, address, photo_url, years_of_experience, phone_number, hospital_affiliations } = req.body;
 
         // Check if the user tries to update a non-updatable property
         const invalidUpdate = Object.keys(req.body).filter((field) => !allowedFields.includes(field));
         if (invalidUpdate.length > 0) throw new utils.ForbiddenError("Invalid fields in the request");
 
         // Fetch the user
-        const user = await User.findOne({ where: { id: req.user.id } });
+        const user = await Doctor.findOne({ where: { id: req.user.id } });
         if (!user) throw new utils.NotFoundError("User not found");
 
         // Prepare updated data
         const updateData = {};
-        if (full_name) updateData.full_name = full_name;
         if (email) updateData.email = email;
+        if (full_name) updateData.full_name = full_name;
+        if (birth_date) updateData.birth_date = birth_date;
         if (address) updateData.address = address;
         if (photo_url) updateData.photo_url = photo_url;
-
+        if (years_of_experience) updateData.years_of_experience = years_of_experience;
+        if (phone_number) updateData.phone_number = phone_number;
+        if (hospital_affiliations) updateData.hospital_affiliations = hospital_affiliations;
+        
         // Update user data
-        const [updatedRows, updatedUser] = await User.update(updateData, { where: { id: req.user.id }, returning: true });
+        const [updatedRows, updatedUser] = await Doctor.update(updateData, { where: { id: req.user.id }, returning: true });
 
         // Check if any rows were updated
         if (updatedRows === 0) {

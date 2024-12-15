@@ -1,10 +1,11 @@
-import { Token, User } from '../../../models/models-index.js';
+import { Token, Patient } from '../../../models/models-index.js';
 import * as utils from '../../../utils/utils-index.js';
+import * as validate from '../../validators/user-validator.js';
 
 export default async (req, res) => {
   try {
     // validate the presence of refreshToken in the request body
-    const { error } = validateRefreshToken(req.body);
+    const { error } = validate.refreshToken(req.body);
     
     if (error) {
       throw new utils.ValidationError("Refresh token not provided");
@@ -18,7 +19,7 @@ export default async (req, res) => {
     if (!isValid) throw new utils.UnauthorizedError("Invalid refresh token, need to login again");
     
     // Fetch user
-    const user = await User.findByPk(id);
+    const user = await Patient.findByPk(id);
 
     if (!user) throw new utils.NotFoundError("User not found");
 

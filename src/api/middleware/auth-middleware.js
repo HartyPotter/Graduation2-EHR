@@ -19,7 +19,7 @@ export const authAccessToken = async (req, res, next) => {
       if (!user) return next(new utils.UnauthorizedError("Invalid access token"));
 
       // Remove user password from response
-      const userData = user.toJSON();
+      const userData = user;
       delete userData.password;
 
       req.user = userData;

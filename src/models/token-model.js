@@ -13,6 +13,7 @@ Token.init({
   user_id: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   user_type: {
     type: DataTypes.STRING,

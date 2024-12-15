@@ -1,19 +1,19 @@
 import * as utils from '../../../utils/utils-index.js';
-import { User } from '../../../models/models-index.js'
-import { validateForgotPassword } from '../../validators/user-validator.js';
+import { Doctor } from '../../../models/models-index.js'
+import * as validate from '../../validators/user-validator.js';
 
 
 export default async (req, res) => {
     try {
         // Validate that user provided the his email
-        const { error } = validateForgotPassword(req.body);
+        const { error } = validate.forgotPassword(req.body);
         if (error) throw new utils.ValidationError('Email not provided.');
     
         // Destrucutre the request body
         const { email } = req.body;
     
         // find user with his email
-        const user = await User.findOne({where: { email }});
+        const user = await Doctor.findOne({where: { email }});
     
         if (!user) throw new utils.NotFoundError('No user with this email was found.');
     
@@ -21,7 +21,7 @@ export default async (req, res) => {
         const resetToken = await utils.signResetToken(email);
     
         // generate reset link to be sent to the user
-        const resetLink = `http://localhost:3000/api/user/reset-password?token=${resetToken}`;
+        const resetLink = `http://localhost:3000/api/doctor/reset-password?token=${resetToken}`;
     
         // Send email with the link to the user
         utils.sendResetPasswordEmail(email, user.full_name, resetLink);
