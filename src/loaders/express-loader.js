@@ -33,7 +33,7 @@ export default (app) => {
   // Essential middleware setup
   app.enable('trust proxy');
   app.use(cors({
-    origin: '*',
+    origin: 'http://localhost:3001',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
