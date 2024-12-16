@@ -10,6 +10,7 @@ import routes from '../api/routes/routes-index.js';
 import { errorMiddleware } from '../api/middleware/middleware-index.js';
 import passport from '../config/passport.js';
 import * as utils from '../utils/utils-index.js'; 
+import * as cookieParser from 'cookie-parser';
 // import rateLimiter from '../api/middleware/rate-limiter.js';
 
 export default (app) => {
@@ -31,7 +32,13 @@ export default (app) => {
 
   // Essential middleware setup
   app.enable('trust proxy');
-  app.use(cors({ origin: '*' , credentials: true }));
+  app.use(cors({
+    origin: '*',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  }));
+  app.use(cookieParser());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(morgan('dev'));
