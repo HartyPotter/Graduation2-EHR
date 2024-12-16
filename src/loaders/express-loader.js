@@ -10,7 +10,7 @@ import routes from '../api/routes/routes-index.js';
 import { errorMiddleware } from '../api/middleware/middleware-index.js';
 import passport from '../config/passport.js';
 import * as utils from '../utils/utils-index.js'; 
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 // import rateLimiter from '../api/middleware/rate-limiter.js';
 
 export default (app) => {
