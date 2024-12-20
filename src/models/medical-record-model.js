@@ -40,7 +40,7 @@ const medicalRecordSchema = new Schema({
 });
 
 // Indexes
-medicalRecordSchema.index({ patient_id: 1 });
+// medicalRecordSchema.index({ patient_id: 1 });
 medicalRecordSchema.index({ createdAt: 1 });
 medicalRecordSchema.index({ updatedAt: 1 });
 

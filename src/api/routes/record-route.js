@@ -2,7 +2,7 @@
 import express from 'express';
 import { 
     createRecord,
-    // getRecord,
+    getRecord,
     // updateRecord,
     // deleteRecord
 } from '../controllers/record/index.js';
@@ -46,7 +46,7 @@ const router = express.Router();
 
 // Medical Records routes
 router.post('/medical-records', createRecord);
-// router.get('/medical-records/:id', getRecord);
+router.get('/medical-records/:id', getRecord);
 // router.put('/medical-records/:id', updateRecord);
 // router.delete('/medical-records/:id', deleteRecord);
 
