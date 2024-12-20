@@ -14,3 +14,5 @@ export const getRecordSchema = {
     id: Joi.string().required()
   }
 }
+
+export const deleteRecordSchema = getRecordSchema;

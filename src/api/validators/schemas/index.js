@@ -1,4 +1,4 @@
-export { createRecordSchema, getRecordSchema } from './medical-record.js';
+export { createRecordSchema, getRecordSchema, deleteRecordSchema } from './medical-record.js';
 export { createAllergySchema } from './allergy.js';
 export { createConditionSchema } from './condition.js';
 export { createMedicationSchema } from './medication.js';

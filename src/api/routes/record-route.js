@@ -4,7 +4,7 @@ import {
     createRecord,
     getRecord,
     // updateRecord,
-    // deleteRecord
+    deleteRecord
 } from '../controllers/record/index.js';
 import {
     createVisit,
@@ -48,7 +48,7 @@ const router = express.Router();
 router.post('/medical-records', createRecord);
 router.get('/medical-records/:id', getRecord);
 // router.put('/medical-records/:id', updateRecord);
-// router.delete('/medical-records/:id', deleteRecord);
+router.delete('/medical-records/:id', deleteRecord);
 
 // Visit routes
 router.post('/visits', createVisit);
