@@ -8,4 +8,4 @@ export const  errorMiddleware = (err, req, res, next) => {
   return utils.sendError(res, err);
 };
 
-// export default errorMiddleware;
+export default errorMiddleware;
