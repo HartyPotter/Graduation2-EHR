@@ -14,7 +14,6 @@ const redisClient = createClient({
         },
         connectTimeout: 10000,
         host: redisHost,
-        redis-11154.c100.us-east-1-4.ec2.redns.redis-cloud.com:11154
         port: redisPort
     }
 });
