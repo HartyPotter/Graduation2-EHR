@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+import { redisHost, redisPort } from '../config/config.js';
 
 const redisClient = createClient({
     password: 'JoeBeanz123',
@@ -12,8 +13,8 @@ const redisClient = createClient({
             }
         },
         connectTimeout: 10000,
-        host: 'redis-11154.c100.us-east-1-4.ec2.redns.redis-cloud.com',
-        port: 11154
+        host: redisHost,
+        port: redisPort
     }
 });
 

@@ -5,7 +5,7 @@ config();
 //NOTE: If you are running the project in an instance, you should store these secret keys in its configuration settings.
 // This type of storing secret information is only experimental and for the purpose of local running.
 
-const { DB_URI, PORT, JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, JWT_RESET_SECRET_KEY, APP_MAIL, APP_MAIL_KEY } = process.env
+const { DB_URI, PORT, JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, JWT_RESET_SECRET_KEY, APP_MAIL, APP_MAIL_KEY, REDIS_HOST, REDIS_PORT } = process.env
 
 export const port = PORT || 3000;
 export const dbUri = DB_URI;
@@ -22,3 +22,7 @@ export const app_mail_key = APP_MAIL_KEY
 export const jwtSecretKey = JWT_ACCESS_SECRET_KEY
 export const refreshTokenSecretKey = JWT_REFRESH_SECRET_KEY
 export const resetSecretKey = JWT_RESET_SECRET_KEY
+
+// REDIS
+export const redisHost = REDIS_HOST
+export const redisPort = REDIS_PORT

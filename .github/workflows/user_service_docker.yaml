@@ -41,5 +41,7 @@ jobs:
             -e JWT_RESET_SECRET_KEY="${{ secrets.JWT_RESET_SECRET_KEY }}" \
             -e APP_MAIL="${{ secrets.APP_MAIL }}" \
             -e APP_MAIL_KEY="${{ secrets.APP_MAIL_KEY }}" \
+            -e REDIS_HOST="${{ secrets.REDIS_HOST }}" \
+            -e REDIS_PORT="${{ secrets.REDIS_PORT }}" \
             -p 3000:3000 \
             $DOCKER_IMAGE_NAME:$IMAGE_TAG
