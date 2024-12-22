@@ -1,4 +1,4 @@
-name: Build, Push, and Run Docker Container
+name: Patient service pipeline
 
 on:
   push:
