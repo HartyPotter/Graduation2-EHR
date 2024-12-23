@@ -2,6 +2,8 @@ import { createClient } from 'redis';
 import { redisHost, redisPort, redisPass } from '../config/config.js';
 
 const redisClient = createClient({
+    username: 'default',
+    password: redisPass,
     socket: {
         reconnectStrategy: function(retries) {
             if (retries > 20) {
@@ -14,10 +16,17 @@ const redisClient = createClient({
         connectTimeout: 10000,
         host: redisHost,
         port: redisPort,
-        password: redisPass
     }
 });
 
+const client = createClient({
+    username: 'default',
+    password: 'OS29hReaPP6e75raJEoh7qAsX8MNt5gM',
+    socket: {
+        host: 'redis-14068.c239.us-east-1-2.ec2.redns.redis-cloud.com',
+        port: 14068
+    }
+});
 redisClient.on('connect', () => {
     console.log('Connected to Redis');
 });
