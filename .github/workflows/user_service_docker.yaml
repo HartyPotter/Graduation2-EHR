@@ -43,5 +43,6 @@ jobs:
             -e APP_MAIL_KEY="${{ secrets.APP_MAIL_KEY }}" \
             -e REDIS_HOST="redis-11154.c100.us-east-1-4.ec2.redns.redis-cloud.com" \
             -e REDIS_PORT=11154 \
+            -e REDIS_PASS="JoeBeanz123" \
             -p 3000:3000 \
             $DOCKER_IMAGE_NAME:$IMAGE_TAG

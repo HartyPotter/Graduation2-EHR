@@ -1,8 +1,7 @@
 import { createClient } from 'redis';
-import { redisHost, redisPort } from '../config/config.js';
+import { redisHost, redisPort, redisPass } from '../config/config.js';
 
 const redisClient = createClient({
-    password: 'JoeBeanz123',
     socket: {
         reconnectStrategy: function(retries) {
             if (retries > 20) {
@@ -14,7 +13,8 @@ const redisClient = createClient({
         },
         connectTimeout: 10000,
         host: redisHost,
-        port: redisPort
+        port: redisPort,
+        password: redisPass
     }
 });
 
