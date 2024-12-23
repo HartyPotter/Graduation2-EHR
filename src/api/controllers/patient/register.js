@@ -3,6 +3,7 @@ import * as validate from '../../validators/user-validator.js';
 import * as utils from '../../../utils/utils-index.js';
 import { redisClient } from '../../../loaders/redis-loader.js';
 import bcrypt from 'bcrypt';
+import { createMedicalRecord } from '../../../interfaces/patient/create-medical-record.js';
 
 export default async (req, res) => {
   try {
@@ -68,6 +69,15 @@ export default async (req, res) => {
       contact_id: contact.id,
       is_emergency_contact: true,
     });
+
+    const recordCreationSuccessful = await createMedicalRecord({ patient_id: user.id, blood_type: "AB+", weight: 76, height: 176 });
+
+    if (recordCreationSuccessful) {
+      console.log('Medical record created successfully');
+    } else {
+      console.error('Error creating medical record');
+      throw new utils.InternalServerError('Error creating medical record');
+    }
 
     // Generate email verification code and token
     const emailCode = utils.generateRandomCode(4);
