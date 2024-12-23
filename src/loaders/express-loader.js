@@ -25,10 +25,10 @@ export default (app) => {
   });
 
   // Ensure JWT secret key is defined, otherwise exit
-  if (!jwtSecretKey) {
-    console.error('JWT secret key is not defined');
-    process.exit(1);
-  }
+  // if (!jwtSecretKey) {
+  //   console.error('JWT secret key is not defined');
+  //   process.exit(1);
+  // }
 
   // Essential middleware setup
   app.enable('trust proxy');
