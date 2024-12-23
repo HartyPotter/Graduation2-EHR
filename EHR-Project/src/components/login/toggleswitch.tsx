@@ -8,19 +8,26 @@ interface ToggleSwitchProps {
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ id, checked, onChange }) => {
   return (
-    <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+    <div className="relative inline-block w-12 h-6 align-middle select-none transition duration-200 ease-in">
       <input
         type="checkbox"
-        name={id}
         id={id}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+        className="absolute opacity-0 w-0 h-0"
       />
       <label
         htmlFor={id}
-        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-      ></label>
+        className={`block cursor-pointer bg-gray-300 h-6 w-12 rounded-full transition-colors duration-200 ease-in ${
+          checked ? "bg-green-500" : "bg-gray-300"
+        }`}
+      >
+        <span
+          className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform duration-200 ease-in ${
+            checked ? "translate-x-6" : "translate-x-0"
+          }`}
+        ></span>
+      </label>
     </div>
   );
 };

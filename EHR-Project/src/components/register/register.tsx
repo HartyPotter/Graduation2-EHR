@@ -1,9 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
+import axios from 'axios';
+import * as Yup from "yup";
 
 
-// Define the types for form inputs
 interface RegisterFormInputs {
   username: string;
   email: string;
@@ -13,14 +14,14 @@ interface RegisterFormInputs {
 }
 
 
-/* const validationSchema = Yup.object().shape({
+const validationSchema = Yup.object().shape({
   username: Yup.string()
     .required("Username is required"),
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
   phoneNumber: Yup.string()
-    .matches(/^\d{10}$/, "Phone number must be 10 digits")
+    .matches(/^\d{11}$/, "Phone number must be 10 digits")
     .required("Phone number is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
@@ -29,22 +30,28 @@ interface RegisterFormInputs {
     .oneOf([Yup.ref("password"), undefined], "Passwords must match")
     .required("Confirm password is required"),
 });
- */
 
 const Register = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (
-    values: RegisterFormInputs,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+      values: RegisterFormInputs,
+      { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    setTimeout(() => {
-      toast.success("Registration successful! Navigating...");
-      localStorage.setItem("token", "dummy-token");
-      setSubmitting(false);
-      navigate("/add");
-    }); 
+      try {
+          const response = await axios.post('/http://localhost:3000/api/doctor/register', values);
+          toast.success('Registration successful! Navigating...');
+          localStorage.setItem('token', response.data.token); 
+          setSubmitting(false);
+          navigate('/add');
+      } catch (error: any) {
+          toast.error(error.response?.data?.message || 'Registration failed');
+          console.error('Error in Registration:', error);
+          setSubmitting(false);
+      }
   };
+
+
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
@@ -68,8 +75,8 @@ const Register = () => {
                 password: "",
                 confirmPassword: "",
               }}
-/*               validationSchema={validationSchema}
- */              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
             >
               {({ isSubmitting }) => (
                 <Form className="space-y-6">

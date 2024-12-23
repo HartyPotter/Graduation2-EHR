@@ -2,16 +2,20 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
-import ToggleSwitch from "./toggleswitch"; 
+import { NavLink, useNavigate} from "react-router-dom";
+import ToggleSwitch from "./toggleswitch";
+import Cookies from "js-cookie";
 
 
 
 interface LoginFormInputs {
   email: string;
   password: string;
-  rememberMe: boolean; 
 }
+
+const API_ENDPOINTS = {
+  LOGIN: "/api/doctor/login",
+};
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email format").required("Email is required"),
@@ -21,22 +25,50 @@ const validationSchema = Yup.object().shape({
 });
 
 function LoginForm() {
-  // Handle form submission
+
+  const navigate = useNavigate();
+
+  const api = axios.create({
+    baseURL: "http://localhost:3000",
+    withCredentials: true,
+  });
+
+  
+
   const handleSubmit = async (values: LoginFormInputs) => {
     try {
-      const response = await axios.post("/api/v1/auth/login", values);
-      toast.success("Login successful!");
-      console.log("Response:", response.data);
-      localStorage.setItem("token", response.data.token);
-    } catch (error) {
-      toast.error("Login failed");
-      console.error("Error in Login:", error);
+      console.log(values);
+      // delete values.y;
+      const response = await api.post(API_ENDPOINTS.LOGIN, values);
+  
+      if (response.status === 200 && response.data.data) {
+        Cookies.set("accessToken", response.data.data.accessToken, { expires: 7, secure: true });
+        Cookies.set("refreshToken", response.data.data.refreshToken, { expires: 30, secure: true });        
+  
+        toast.success("Login successful!");
+
+
+        navigate("/dashboard");
+      } else {
+        throw new Error("Invalid response format.");
+      }
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        if (!error.response) {
+          toast.error("Network error. Please check your connection.");
+        } else if (error.response.status === 401) {
+          toast.error("Invalid email or password.");
+        } else {
+          toast.error(error.response.data?.message || "Login failed. Please try again.");
+        }
+      }
+      
     }
   };
 
-  // Handle forgot password click
+  
   const handleForgotPassword = () => {
-    toast.success("Reset link sent to email");
+    toast.success("Reset link sent to your email.");
   };
 
   return (
@@ -54,7 +86,7 @@ function LoginForm() {
             </div>
 
             <Formik
-              initialValues={{ email: "", password: "", rememberMe: false }}
+              initialValues={{ email: "", password: ""}}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
@@ -104,11 +136,7 @@ function LoginForm() {
 
                   <div className="flex items-center justify-between">
                     <label className="flex items-center">
-                      <ToggleSwitch
-                        id="rememberMe"
-                        checked={values.rememberMe}
-                        onChange={(checked) => setFieldValue("rememberMe", checked)}
-                      />
+
                       <span className="ml-2 text-sm text-gray-700">Remember me</span>
                     </label>
                     <NavLink
