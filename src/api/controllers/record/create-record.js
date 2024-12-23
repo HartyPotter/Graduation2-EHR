@@ -39,10 +39,12 @@ export default [
     collection_name: 'medical_records',
     document_id: savedRecord._id,
     action: 'CREATE',
+    doctor_id: "DR123456",
     changes: {
       after: savedRecord.toObject()
     },
     reason: 'Initial medical record creation',
+    status: 'Success',
     req
   });
   
