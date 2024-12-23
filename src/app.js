@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express from 'express';
 import { port } from './config/config.js';
 import loader from './loaders/loaders-index.js';
@@ -14,4 +15,4 @@ app.listen(port, err => {
   console.log(`Patient Service is running on ${port}`);
 });
 
-export default app
+export default app;

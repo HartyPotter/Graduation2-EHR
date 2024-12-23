@@ -14,6 +14,6 @@ export const createSurgerySchema = {
     post_op_instructions: Joi.string(),
     follow_up_date: Joi.date().iso().min(Joi.ref('procedure_date')),
     emergency: Joi.boolean().default(false),
-    images: Joi.array().items(Joi.string().uri())
-  }
-}
+    images: Joi.array().items(Joi.string().uri()),
+  },
+};

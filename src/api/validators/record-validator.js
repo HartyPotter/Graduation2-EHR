@@ -8,9 +8,9 @@ export function validateCondition(body) {
     diagnosis: Joi.string().allow(null, ''),
     details: Joi.string().allow(null, ''),
     treated: Joi.boolean().required(),
-    });
+  });
 
-    return conditionSchema.validate(body);
+  return conditionSchema.validate(body);
 }
 
 export function validateMedication(body) {
@@ -23,9 +23,9 @@ export function validateMedication(body) {
     dosage: Joi.string().required(),
     start_date: Joi.date().required(),
     end_date: Joi.date().required(),
-    });
+  });
 
-    return medicationSchema.validate(body);
+  return medicationSchema.validate(body);
 }
 
 export function validateImmunization(body) {
@@ -34,9 +34,9 @@ export function validateImmunization(body) {
     administered_by: Joi.string().required(),
     vaccine_name: Joi.string().required(),
     date_administered: Joi.date().required(),
-    });
+  });
 
-    return immunizationSchema.validate(body);
+  return immunizationSchema.validate(body);
 }
 
 export function validateSurgery(body) {
@@ -47,9 +47,9 @@ export function validateSurgery(body) {
     scheduled_date: Joi.date().required(),
     date_performed: Joi.date().required(),
     details: Joi.string().required(),
-    });
+  });
 
-    return procedureSchema.validate(body);
+  return procedureSchema.validate(body);
 }
 
 export function validateTest(body) {
@@ -58,9 +58,9 @@ export function validateTest(body) {
     ordered_by: Joi.string().required(),
     test_name: Joi.string().required(),
     date_ordered: Joi.string().required(),
-    });
+  });
 
-    return testSchema.validate(body);
+  return testSchema.validate(body);
 }
 
 export function validateVital(body) {
@@ -71,9 +71,9 @@ export function validateVital(body) {
     value: Joi.number().required(),
     unit: Joi.string().required(),
     recorded_at: Joi.string().required(),
-    });
+  });
 
-    return vitalSchema.validate(body);
+  return vitalSchema.validate(body);
 }
 
 export function validateVisit(body) {
@@ -86,9 +86,9 @@ export function validateVisit(body) {
     reason: Joi.string().allow(null, ''),
     notes: Joi.string().allow(null, ''),
     report_id: Joi.string().allow(null, ''),
-    });
+  });
 
-    return visitSchema.validate(body);
+  return visitSchema.validate(body);
 }
 
 export function validateAllergy(body) {
@@ -98,7 +98,7 @@ export function validateAllergy(body) {
     allergy: Joi.string().required(),
     diagnosis_date: Joi.string().allow(null, ''), // Optional field
     severity: Joi.number().min(0).max(10).required(),
-    });
+  });
 
-    return allergySchema.validate(body);
-  }
+  return allergySchema.validate(body);
+}

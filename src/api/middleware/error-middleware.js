@@ -1,17 +1,18 @@
 import { BaseError, ValidationError } from '../../utils/errors.js';
 
 export const errorMiddleware = (err, req, res, next) => {
-  console.error('Error:', err);
-
   // Convert Mongoose validation errors to custom ValidationError
   if (err.name === 'ValidationError' && err.errors) {
     const details = Object.values(err.errors).map(error => ({
       field: error.path,
       message: error.message,
-      value: error.value
+      value: error.value,
     }));
-    
+
+    // eslint-disable-next-line no-param-reassign
     err = new ValidationError('Database Validation Error: Invalid or missing required fields', details);
+
+    // eslint-disable-next-line no-param-reassign
     err.errorType = 'MongooseValidationError';
   }
 
@@ -19,7 +20,7 @@ export const errorMiddleware = (err, req, res, next) => {
   if (err.code === 11000) {
     const field = Object.keys(err.keyPattern)[0];
     const value = err.keyValue[field];
-    
+
     return res.status(409).json({
       status: 'error',
       errorType: 'DuplicateKeyError',
@@ -27,8 +28,8 @@ export const errorMiddleware = (err, req, res, next) => {
       details: {
         field,
         value,
-        constraint: 'unique'
-      }
+        constraint: 'unique',
+      },
     });
   }
 
@@ -38,7 +39,7 @@ export const errorMiddleware = (err, req, res, next) => {
       status: 'error',
       errorType: err.errorType,
       message: err.message,
-      ...(err.details && { details: err.details })
+      ...(err.details && { details: err.details }),
     });
   }
 
@@ -50,8 +51,8 @@ export const errorMiddleware = (err, req, res, next) => {
     ...(process.env.NODE_ENV === 'development' && {
       details: {
         message: err.message,
-        stack: err.stack
-      }
-    })
+        stack: err.stack,
+      },
+    }),
   });
 };

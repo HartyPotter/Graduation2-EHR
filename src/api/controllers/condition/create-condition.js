@@ -16,9 +16,9 @@ export default [
       notes,
       severity,
       treatment_plan,
-      expected_duration
+      expected_duration,
     } = req.body;
-    
+
     const doctor_id = req.body?.doctor_id;
     if (!doctor_id) {
       throw new ValidationError('Doctor ID not provided', { field: 'doctor_id' });
@@ -39,7 +39,7 @@ export default [
       diagnosing_doctor_id: doctor_id,
       severity,
       treatment_plan,
-      expected_duration
+      expected_duration,
     });
 
     const savedCondition = await condition.save();
@@ -56,13 +56,13 @@ export default [
       document_id: savedCondition._id,
       action: 'CREATE',
       changes: {
-        after: savedCondition.toObject()
+        after: savedCondition.toObject(),
       },
       doctor_id,
       reason: `New condition diagnosed: ${condition_name}`,
-      req
+      req,
     });
 
     return sendSuccess(res, savedCondition, 'Medical condition added successfully', 201);
-  })
+  }),
 ];

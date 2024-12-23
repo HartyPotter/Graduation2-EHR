@@ -1,37 +1,38 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const allergySchema = new Schema({
   medical_record_id: {
     type: Schema.Types.ObjectId,
     ref: 'MedicalRecord',
-    required: true
+    required: true,
   },
   allergen_name: {
     type: String,
-    required: true
+    required: true,
   },
   allergen_type: {
     type: String,
     enum: ['Drug', 'Food', 'Environmental', 'Other'],
-    required: true
+    required: true,
   },
   reaction: {
     type: String,
-    required: true
+    required: true,
   },
   severity: {
     type: String,
     enum: ['Mild', 'Moderate', 'Severe', 'Life-threatening'],
-    required: true
+    required: true,
   },
   diagnosing_doctor_id: {
     type: String, // External ID from PostgreSQL
-    required: true
+    required: true,
   },
   diagnosis_date: {
     type: Date,
-    required: true
+    required: true,
   },
   onset_date: Date,
   last_occurrence: Date,
@@ -41,17 +42,17 @@ const allergySchema = new Schema({
   status: {
     type: String,
     enum: ['Active', 'Inactive', 'Resolved'],
-    default: 'Active'
+    default: 'Active',
   },
   verification_status: {
     type: String,
     enum: ['Reported', 'Confirmed', 'Refuted'],
-    default: 'Reported'
+    default: 'Reported',
   },
-  notes: String
+  notes: String,
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

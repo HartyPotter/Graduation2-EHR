@@ -23,6 +23,6 @@ export const createAllergySchema = {
     onset_date: Joi.date().iso().max('now'),
     treatment_plan: Joi.string(),
     emergency_instructions: Joi.string(),
-    medications_to_avoid: Joi.array().items(Joi.string())
-  }
-}
+    medications_to_avoid: Joi.array().items(Joi.string()),
+  },
+};

@@ -25,7 +25,7 @@ export default [
       vitals,
       duration,
       follow_up_needed,
-      follow_up_date
+      follow_up_date,
     } = req.body;
 
     const doctor_id = req.body?.doctor_id;
@@ -58,7 +58,7 @@ export default [
       duration,
       follow_up_needed,
       follow_up_date,
-      status: 'Completed'
+      status: 'Completed',
     });
 
     const savedVisit = await visit.save();
@@ -75,14 +75,14 @@ export default [
       document_id: savedVisit._id,
       action: 'CREATE',
       changes: {
-        after: savedVisit.toObject()
+        after: savedVisit.toObject(),
       },
       doctor_id,
       reason: `New visit recorded: ${visit_type} - ${reason}`,
       access_type: visit_type === 'Emergency' ? 'Emergency' : 'Regular',
-      req
+      req,
     });
 
     return sendSuccess(res, savedVisit, 'Visit recorded successfully', 201);
-  })
+  }),
 ];

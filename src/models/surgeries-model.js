@@ -1,27 +1,28 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const surgerySchema = new Schema({
   medical_record_id: {
     type: Schema.Types.ObjectId,
     ref: 'MedicalRecord',
-    required: true
+    required: true,
   },
   type: {
     type: String,
-    required: true
+    required: true,
   },
   procedure_date: {
     type: Date,
-    required: true
+    required: true,
   },
   hospital: {
     type: String,
-    required: true
+    required: true,
   },
   surgeon_id: {
     type: String, // External ID from PostgreSQL
-    required: true
+    required: true,
   },
   assistant_surgeon_ids: [String], // External IDs from PostgreSQL
   anesthesiologist_id: String, // External ID from PostgreSQL
@@ -39,21 +40,21 @@ const surgerySchema = new Schema({
   status: {
     type: String,
     enum: ['Scheduled', 'Completed', 'Cancelled', 'Postponed'],
-    required: true
+    required: true,
   },
   cancellation_reason: String,
   emergency: {
     type: Boolean,
-    default: false
+    default: false,
   },
   images: [{
     url: String,
     description: String,
-    uploaded_at: Date
-  }]
+    uploaded_at: Date,
+  }],
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

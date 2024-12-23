@@ -18,7 +18,7 @@ export default [
       onset_date,
       treatment_plan,
       emergency_instructions,
-      medications_to_avoid
+      medications_to_avoid,
     } = req.body;
 
     const doctor_id = req.user?.id;
@@ -45,7 +45,7 @@ export default [
       emergency_instructions,
       medications_to_avoid,
       status: 'Active',
-      verification_status: 'Confirmed'
+      verification_status: 'Confirmed',
     });
 
     const savedAllergy = await allergy.save();
@@ -62,14 +62,14 @@ export default [
       document_id: savedAllergy._id,
       action: 'CREATE',
       changes: {
-        after: savedAllergy.toObject()
+        after: savedAllergy.toObject(),
       },
       doctor_id,
       reason: `New allergy documented: ${allergen_name}`,
       access_type: severity === 'Life-threatening' ? 'Emergency' : 'Regular',
-      req
+      req,
     });
 
     return sendSuccess(res, savedAllergy, 'Allergy documented successfully', 201);
-  })
+  }),
 ];

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import record from './record-route.js';
 
 const router = Router();

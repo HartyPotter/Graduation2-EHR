@@ -22,7 +22,6 @@ export const createMedicationSchema = {
     contraindications: Joi.array().items(Joi.string()),
     refills_remaining: Joi.number().min(0),
     pharmacy_notes: Joi.string(),
-    prescription_id: Joi.string()
-  }
-}
-
+    prescription_id: Joi.string(),
+  },
+};

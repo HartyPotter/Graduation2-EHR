@@ -1,55 +1,56 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const auditLogSchema = new Schema({
   medical_record_id: {
     type: Schema.Types.ObjectId,
     ref: 'MedicalRecord',
-    required: true
+    required: true,
   },
   collection_name: {
     type: String,
     enum: ['medical_records', 'conditions', 'medications', 'surgeries', 'visits', 'allergies', 'lifestyle'],
-    required: true
+    required: true,
   },
   document_id: {
     type: Schema.Types.ObjectId,
-    required: true
+    required: true,
   },
   action: {
     type: String,
     enum: ['CREATE', 'UPDATE', 'DELETE', 'VIEW'],
-    required: true
+    required: true,
   },
   changes: {
     before: Schema.Types.Mixed,
-    after: Schema.Types.Mixed
+    after: Schema.Types.Mixed,
   },
   doctor_id: {
     type: String, // External ID from PostgreSQL
-    required: true
+    required: true,
   },
   ip_address: String,
   user_agent: String,
   reason: {
     type: String,
-    required: true
+    required: true,
   },
   access_type: {
     type: String,
     enum: ['Regular', 'Emergency', 'Administrative'],
-    default: 'Regular'
+    default: 'Regular',
   },
   status: {
     type: String,
     enum: ['Success', 'Failed', 'Denied'],
-    required: true
+    required: true,
   },
   failure_reason: String,
-  metadata: Schema.Types.Mixed
+  metadata: Schema.Types.Mixed,
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

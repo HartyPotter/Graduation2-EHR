@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const vitalSchema = new Schema({
@@ -11,34 +12,34 @@ const vitalSchema = new Schema({
   pain_level: {
     type: Number,
     min: 0,
-    max: 10
+    max: 10,
   },
   bmi: Number,
-  other: Schema.Types.Mixed
+  other: Schema.Types.Mixed,
 });
 
 const visitSchema = new Schema({
   medical_record_id: {
     type: Schema.Types.ObjectId,
     ref: 'MedicalRecord',
-    required: true
+    required: true,
   },
   doctor_id: {
     type: String, // External ID from PostgreSQL
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    required: true
+    required: true,
   },
   visit_type: {
     type: String,
     enum: ['Regular', 'Emergency', 'Follow-up', 'Consultation', 'Telemedicine'],
-    required: true
+    required: true,
   },
   reason: {
     type: String,
-    required: true
+    required: true,
   },
   complaint: String,
   symptoms: [String],
@@ -46,7 +47,7 @@ const visitSchema = new Schema({
   treatment_plan: String,
   medications_prescribed: [{
     type: Schema.Types.ObjectId,
-    ref: 'Medication'
+    ref: 'Medication',
   }],
   referrals: [{
     specialty: String,
@@ -54,28 +55,28 @@ const visitSchema = new Schema({
     reason: String,
     priority: {
       type: String,
-      enum: ['Routine', 'Urgent', 'Emergency']
-    }
+      enum: ['Routine', 'Urgent', 'Emergency'],
+    },
   }],
   lab_orders: [{
     test_name: String,
     status: {
       type: String,
-      enum: ['Ordered', 'Completed', 'Cancelled']
+      enum: ['Ordered', 'Completed', 'Cancelled'],
     },
     results: Schema.Types.Mixed,
     ordered_date: Date,
-    completed_date: Date
+    completed_date: Date,
   }],
   imaging_orders: [{
     type: String,
     status: {
       type: String,
-      enum: ['Ordered', 'Completed', 'Cancelled']
+      enum: ['Ordered', 'Completed', 'Cancelled'],
     },
     results: Schema.Types.Mixed,
     ordered_date: Date,
-    completed_date: Date
+    completed_date: Date,
   }],
   notes: String,
   facility: String,
@@ -84,18 +85,18 @@ const visitSchema = new Schema({
   status: {
     type: String,
     enum: ['Scheduled', 'In Progress', 'Completed', 'Cancelled', 'No Show'],
-    default: 'Scheduled'
+    default: 'Scheduled',
   },
   billing_status: {
     type: String,
     enum: ['Pending', 'Billed', 'Paid', 'Denied'],
-    default: 'Pending'
+    default: 'Pending',
   },
   follow_up_needed: Boolean,
-  follow_up_date: Date
+  follow_up_date: Date,
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

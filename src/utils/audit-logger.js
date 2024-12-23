@@ -9,7 +9,7 @@ export const createAuditLog = async ({
   doctor_id,
   reason,
   access_type = 'Regular',
-  req
+  req,
 }) => {
   try {
     const auditLog = new AuditLog({
@@ -23,7 +23,7 @@ export const createAuditLog = async ({
       access_type,
       ip_address: req.ip,
       user_agent: req.get('user-agent'),
-      status: 'Success'
+      status: 'Success',
     });
 
     await auditLog.save();
