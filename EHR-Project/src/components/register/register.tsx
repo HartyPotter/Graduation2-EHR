@@ -1,211 +1,336 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
-import axios from 'axios';
+import axios from "axios";
+import Cookies from "js-cookie";
 import * as Yup from "yup";
 
 
-interface RegisterFormInputs {
-  username: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  confirmPassword: string;
-}
+// Create an instance of axios for API requests
+const api = axios.create({
+  baseURL: "http://localhost:3000/api",
+  withCredentials: true,
+});
 
 
-const validationSchema = Yup.object().shape({
-  username: Yup.string()
-    .required("Username is required"),
-  email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  phoneNumber: Yup.string()
-    .matches(/^\d{11}$/, "Phone number must be 10 digits")
-    .required("Phone number is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), undefined], "Passwords must match")
-    .required("Confirm password is required"),
+// Validation schema for Doctor form
+const doctorValidationSchema = Yup.object({
+  email: Yup.string().email("Invalid email format").required("Email is required"),
+  fullName: Yup.string().required("Full Name is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  gender: Yup.string(),
+  birthDate: Yup.date().required("Birth Date is required"),
+  address: Yup.string().required("Address is required"),
+  nationalId: Yup.string().required("National ID is required"),
+  specialization: Yup.string().required("Specialization is required"),
+  licenseNumber: Yup.string().required("License Number is required"),
+  phoneNumber: Yup.string(),
+  yearsOfExperience: Yup.number(),
+  hospitalAffiliations: Yup.string(),
+});
+
+// Validation schema for Patient form
+const patientValidationSchema = Yup.object({
+  email: Yup.string().email("Invalid email format").required("Email is required"),
+  fullName: Yup.string().required("Full Name is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  gender: Yup.string().required("Gender is required"),
+  birthDate: Yup.date().required("Birth Date is required"),
+  address: Yup.string().required("Address is required"),
+  nationalId: Yup.string().required("National ID is required"),
+  phoneNumber: Yup.string().required("Phone Number is required"),
 });
 
 const Register = () => {
+  const [role, setRole] = useState("Doctor");
   const navigate = useNavigate();
 
-  const handleSubmit = async (
-      values: RegisterFormInputs,
-      { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
-      try {
-          const response = await axios.post('/http://localhost:3000/api/doctor/register', values);
-          toast.success('Registration successful! Navigating...');
-          localStorage.setItem('token', response.data.token); 
-          setSubmitting(false);
-          navigate('/add');
-      } catch (error: any) {
-          toast.error(error.response?.data?.message || 'Registration failed');
-          console.error('Error in Registration:', error);
-          setSubmitting(false);
-      }
+  // Handle role change
+  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setRole(event.target.value);
   };
 
+  // Handle form submission for Doctor
+  const handleDoctorSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const formElements = event.target as HTMLFormElement;
+    const doctorData = {
+      email: formElements.email.value,
+      fullName: formElements.fullName.value,
+      password: formElements.password.value,
+      gender: formElements.gender.value,
+      birthDate: formElements.birthDate.value,
+      address: formElements.address.value,
+      nationalId: formElements.nationalId.value,
+      specialization: formElements.specialization.value,
+      licenseNumber: formElements.licenseNumber.value,
+      yearsOfExperience: formElements.yearsOfExperience.value,
+      phoneNumber: formElements.phoneNumber.value,
+      educationalBackground: formElements.educationalBackground.value,
+      hospitalAffiliations: formElements.hospitalAffiliations.value,
+    };
+    try {
+      const response = await api.post("/doctor/register", doctorData);
 
+      if (response.status === 200 && response.data.data) {
+        toast.success("Doctor registered successfully!");
+        navigate("/login");
+      } else {
+        toast.error("Registration failed.");
+      }
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        if (!error.response) {
+          toast.error("Network error. Please check your connection.");
+        } else {
+          toast.error(error.response.data?.message || "Registration failed. Please try again.");
+        }
+      }
+    }
+  };
+
+  // Handle form submission for Patient
+  const handlePatientSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const formElements = event.target as HTMLFormElement;
+    const patientData = {
+      email: formElements.email.value,
+      fullName: formElements.fullName.value,
+      password: formElements.password.value,
+      gender: formElements.gender.value,
+      birthDate: formElements.birthDate.value,
+      address: formElements.address.value,
+      nationalId: formElements.nationalId.value,
+      insuranceNumber: formElements.insuranceNumber.value,
+      phoneNumber: formElements.phoneNumber.value,
+    };
+
+    try {
+      const response = await api.post("/patient/register", patientData);
+
+      if (response.status === 200 && response.data.data) {
+        toast.success("Patient registered successfully!");
+        navigate("/login");
+      } else {
+        toast.error("Registration failed.");
+      }
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        if (!error.response) {
+          toast.error("Network error. Please check your connection.");
+        } else {
+          toast.error(error.response.data?.message || "Registration failed. Please try again.");
+        }
+      }
+    }
+  };
+
+  // Render doctor-specific form fields
+  const renderDoctorFields = () => (
+    <form onSubmit={handleDoctorSubmit}>
+      <h2 className="text-xl mb-6 text-center">Add Doctor</h2>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="fullName"
+        placeholder="Full Name*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="gender"
+        placeholder="Gender"
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="date"
+        name="birthDate"
+        placeholder="Birth Date*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="address"
+        placeholder="Address*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="nationalId"
+        placeholder="National ID*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="specialization"
+        placeholder="Specialization*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="licenseNumber"
+        placeholder="License Number*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="yearsOfExperience"
+        placeholder="Years of Experience"
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="phoneNumber"
+        placeholder="Phone Number"
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="educationalBackground"
+        placeholder="Educational Background"
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="hospitalAffiliations"
+        placeholder="Hospital Affiliations"
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <div className="flex justify-between mt-4">
+        <button
+          type="button"
+          className="px-4 py-2 bg-gray-400 text-white rounded"
+          onClick={() => navigate("/login")}
+        >
+          Back
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Register
+        </button>
+      </div>
+    </form>
+  );
+
+  // Render patient-specific form fields
+  const renderPatientFields = () => (
+    <form onSubmit={handlePatientSubmit}>
+      <h2 className="text-xl mb-6 text-center">Add Patient</h2>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="fullName"
+        placeholder="Full Name*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="gender"
+        placeholder="Gender"
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="date"
+        name="birthDate"
+        placeholder="Birth Date*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="address"
+        placeholder="Address*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="nationalId"
+        placeholder="National ID*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="insuranceNumber"
+        placeholder="Insurance Number"
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <input
+        type="text"
+        name="phoneNumber"
+        placeholder="Phone Number*"
+        required
+        className="w-full border rounded mb-4 p-2 focus:outline-none focus:ring focus:ring-blue-300"
+      />
+      <div className="flex justify-between mt-4">
+        <button
+          type="button"
+          className="px-4 py-2 bg-gray-400 text-white rounded"
+          onClick={() => navigate("/login")}
+        >
+          Back
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Register
+        </button>
+      </div>
+    </form>
+  );
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <div className="w-full max-w-lg bg-white shadow-lg shadow-slate-800 rounded-lg">
-        <div className="border-4 border-[#415BE7] rounded-lg">
-          <div className="p-8 space-y-8">
-            <h2 className="text-3xl text-center text-black-900 my-5">
-              Register Your Account
-            </h2>
-            <div className="flex items-center justify-center space-x-4">
-              <hr className="flex-grow border-t border-gray-300" />
-              <span className="text-blue-600">Welcome!</span>
-              <hr className="flex-grow border-t border-gray-300" />
-            </div>
-
-            <Formik
-              initialValues={{
-                username: "",
-                email: "",
-                phoneNumber: "",
-                password: "",
-                confirmPassword: "",
-              }}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
-            >
-              {({ isSubmitting }) => (
-                <Form className="space-y-6">
-                  <div>
-                    <label
-                      htmlFor="username"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Username:
-                    </label>
-                    <Field
-                      type="text"
-                      id="username"
-                      name="username"
-                      className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
-                      placeholder="Username"
-                    />
-                    <ErrorMessage
-                      name="username"
-                      component="p"
-                      className="text-sm text-red-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Email:
-                    </label>
-                    <Field
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
-                      placeholder="you@example.com"
-                    />
-                    <ErrorMessage
-                      name="email"
-                      component="p"
-                      className="text-sm text-red-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="phoneNumber"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Phone Number:
-                    </label>
-                    <Field
-                      type="text"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
-                      placeholder="+0123456789"
-                    />
-                    <ErrorMessage
-                      name="phoneNumber"
-                      component="p"
-                      className="text-sm text-red-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Enter Password:
-                    </label>
-                    <Field
-                      type="password"
-                      id="password"
-                      name="password"
-                      className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
-                      placeholder="********"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="p"
-                      className="text-sm text-red-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="confirmPassword"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Confirm Password:
-                    </label>
-                    <Field
-                      type="password"
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
-                      placeholder="********"
-                    />
-                    <ErrorMessage
-                      name="confirmPassword"
-                      component="p"
-                      className="text-sm text-red-500"
-                    />
-                  </div>
-
-                  <div className="flex justify-end space-x-4">
-                    <NavLink
-                      to="/login"
-                      className="w-full px-4 py-3 text-white bg-gray-500 rounded-md hover:bg-gray-600 focus:ring-4 focus:ring-indigo-500 text-center"
-                    >
-                      Back
-                    </NavLink>
-                    <button
-                      type="submit"
-                      className="w-full px-4 py-3 text-white bg-[#415BE7] rounded-md hover:bg-[#263380] focus:ring-4 focus:ring-indigo-500"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Registering..." : "Register"}
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-
-            <Toaster position="top-center" />
-          </div>
+      <div className="w-full max-w-lg bg-white shadow-lg rounded-lg">
+        <div className="border-4 border-[#415BE7] rounded-lg p-8 space-y-8">
+          <h2 className="text-3xl text-center text-black my-5">Register Your Account</h2>
+          <select
+            value={role}
+            onChange={handleRoleChange}
+            className="block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
+          >
+            <option value="Doctor">Doctor</option>
+            <option value="Patient">Patient</option>
+          </select>
+          {role === "Doctor" ? renderDoctorFields() : renderPatientFields()}
+          <Toaster position="top-center" />
         </div>
       </div>
     </div>
