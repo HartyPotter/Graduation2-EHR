@@ -7,7 +7,7 @@ export async function signAccessToken(userId, role) {
     { id: userId, role},
     jwtSecretKey,
     {
-      expiresIn: '1h',
+      expiresIn: '30d',
     }
   );
   // // Stores the access token in a Redis cache for faster access to the logged in user without having to access the main DB
