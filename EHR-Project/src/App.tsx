@@ -5,6 +5,10 @@ import Register from "./components/register/register";
 import Dashboard from "./components/dashboard/dashboard";
 import PrivateRoute from "./components/ PrivateRoute/PrivateRoute";
 import AddPatientdata from "./components/AddPatient/AddPatient";
+import PatientDashboard from "./components/dashboard/PatientDashboard";
+import PastExaminations from "./components/PatientPages/PastExaminations";
+import TestsAndXrays from "./components/PatientPages/TestsAndXrays"
+import RequestAddition from "./components/PatientPages/RequestAddition"
 function App() {
   return (
     <Routes>
@@ -12,7 +16,11 @@ function App() {
       <Route path="/login" element={<LoginForm />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />}/>
-      <Route path="/AddPatient" element={<PrivateRoute element={<AddPatientdata />} />}/>
+      <Route path="/AddPatient" element={<PrivateRoute element={<AddPatientdata />} />} />
+      <Route path="/PatientDashboard" element={<PrivateRoute element={<PatientDashboard />} />} />
+      <Route path="/PastExaminations" element={<PrivateRoute element={<PastExaminations />} />} />
+      <Route path="/TestsAndXrays" element={<PrivateRoute element={<TestsAndXrays />} />} />
+      <Route path="/RequestAddition" element={<PrivateRoute element={<RequestAddition />} />} />
 
       <Route path="*" element={<div>Page Not Found</div>} />
 
