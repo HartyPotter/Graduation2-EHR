@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configmap
+data:
+  nginx.conf: |
+    events {}
+
+    http {
+        upstream user_service {
+            least_conn;
+            server user-service:80;
+        }
+        upstream patient_records_service {
+            least_conn;
+            server patient-records-service:80;
+        }
+
+        server {
+            listen 80;
+
+            # Allow public access for specific routes
+            location ~ ^/api/(patient|doctor)/(register|login|verify-email|resend-email|forgot-password|reset-password|refresh-token)$ {
+                proxy_pass http://user_service;
+            }
+
+            # Authenticate requests for all other /api/user routes
+            location /api/(patient|doctor) {
+                auth_request /check-authentication; # Internal call to check authorization
+                proxy_pass http://user_service;
+            }
+
+            # Internal endpoint to check authentication
+            location /check-authentication {
+                proxy_pass http://user_service/api/check-authentication;
+                proxy_set_header X-Original-URI $request_uri;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+
+            # Handle unauthorized responses
+            location @unauthenticated {
+                return 401 '{"error":"Unauthenticated"}';
+                add_header Content-Type application/json;
+            }
+
+            # Default route
+            location / {
+                return 404 '{"error":"Not Found"}';
+                add_header Content-Type application/json;
+            }
+
+            error_page 401 = @unauthenticated;
+        }
+    }

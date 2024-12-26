@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patient-records                # Name of the deployment
+  labels:                              # Labels to organize and identify the deployment
+    app: patient-records
+spec:
+  replicas: 2                          # Number of pod replicas to run
+  selector:
+    matchLabels:                       # Selector to match pods managed by this deployment
+      app: patient-records
+  template:                            # Template for the pods
+    metadata:
+      labels:
+        app: patient-records           # Labels applied to the pods
+    spec:
+      containers:                      # Containers running inside the pod
+      - name: patient-records
+        image: joebeanzz123/patient_service:latest       # Docker image for the service
+        ports:
+        - containerPort: 3001          # Port exposed by the container
+        env:                           # Environment variables for the container
+        - name: NODE_ENV
+          value: "production"
+        - name: DB_URI
+          value: "mongodb+srv://HartyPotter:alohomora@krustykrab.qgxswyg.mongodb.net/Patient_Service?retryWrites=true&w=majority&appName=KrustyKrab"
+#        volumeMounts:                  # Optional: Mount volumes (e.g., for certificates)
+#        - name: tls-certs
+#          mountPath: /etc/tls
+#          readOnly: true
+#      volumes:                         # Optional: Volumes for the pod (e.g., Kubernetes secrets)
+#      - name: tls-certs
+#        secret:
+#          secretName: patient-service-tls
+

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: joebeanzz123/user_service:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: DB_URI
+          value: 'postgresql://neondb_owner:tbYk3h6vzPoy@ep-white-leaf-a5mogkc9-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require'
+        - name: JWT_ACCESS_SECRET_KEY
+          value: "access_secret"
+        - name: JWT_REFRESH_SECRET_KEY
+          value: "refresh_secret"
+        - name: JWT_RESET_SECRET_KEY
+          value: "reset_secret"
+        - name: APP_MAIL
+          value: "youssefashraf246@gmail.com"
+        - name: APP_MAIL_KEY
+          value: "wruc lqps zsmd cgwt"
+        - name: REDIS_HOST
+          value: "redis-14068.c239.us-east-1-2.ec2.redns.redis-cloud.com"
+        - name: REDIS_PORT
+          value: '14068'
+        - name: REDIS_PASS
+          value: "OS29hReaPP6e75raJEoh7qAsX8MNt5gM"

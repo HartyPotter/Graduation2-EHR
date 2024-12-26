@@ -1,0 +1,17 @@
+# Make sure compose is installed (it comes with docker desktop by default):
+docker-compose --version
+
+# To run all the containers (Patient and User services):
+docker-compose up -d
+
+# To stop all the containers:
+docker-compose down
+
+# If you want to pull the latest version of the image and restart the container:
+docker-compose pull
+docker-compose up -d
+
+
+Images:
+joebeanzz123/patient_service
+joebeanzz123/user_service

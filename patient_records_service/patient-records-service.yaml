@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: patient-records-service        # Name of the service
+  labels:                              # Labels for organizing the service
+    app: patient-records
+spec:
+  selector:                            # Select pods managed by the service
+    app: patient-records
+  ports:                               # Define how the service maps ports
+  - protocol: TCP
+    port: 80                           # Port exposed to other services (ClusterIP)
+    targetPort: 3001                   # Port on the container (containerPort)
+  type: ClusterIP                      # Internal communication only (default type)
