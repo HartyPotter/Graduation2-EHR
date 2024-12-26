@@ -1,40 +1,41 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const medicationSchema = new Schema({
   medical_record_id: {
     type: Schema.Types.ObjectId,
     ref: 'MedicalRecord',
-    required: true
+    required: true,
   },
   medication_name: {
     type: String,
-    required: true
+    required: true,
   },
   dosage: {
     type: String,
-    required: true
+    required: true,
   },
   frequency: {
     type: String,
-    required: true
+    required: true,
   },
   start_date: {
     type: Date,
-    required: true
+    required: true,
   },
   end_date: Date,
   prescribing_doctor_id: {
     type: String, // External ID from PostgreSQL
-    required: true
+    required: true,
   },
   condition: {
     type: Schema.Types.ObjectId,
-    ref: 'Condition'
+    ref: 'Condition',
   },
   route_of_administration: {
     type: String,
-    required: true
+    required: true,
   },
   side_effects: [String],
   contraindications: [String],
@@ -44,14 +45,14 @@ const medicationSchema = new Schema({
   status: {
     type: String,
     enum: ['Active', 'Discontinued', 'Completed'],
-    default: 'Active'
+    default: 'Active',
   },
   discontinuation_reason: String,
   last_refill_date: Date,
-  next_refill_date: Date
+  next_refill_date: Date,
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

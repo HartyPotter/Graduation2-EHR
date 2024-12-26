@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 class BaseError extends Error {
   constructor(message, statusCode = 500, details = null, errorType = 'BaseError') {
     super(message);
@@ -11,7 +12,7 @@ class BaseError extends Error {
 
 class NotFoundError extends BaseError {
   constructor(resource, id = null, details = null) {
-    const message = id 
+    const message = id
       ? `Resource Not Found: ${resource} with ID ${id} does not exist`
       : `Resource Not Found: ${resource} does not exist`;
     super(message, 404, details, 'NotFoundError');
@@ -50,5 +51,5 @@ export {
   ValidationError,
   UnauthorizedError,
   ForbiddenError,
-  ConflictError
+  ConflictError,
 };

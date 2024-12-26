@@ -1,46 +1,47 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const lifestyleSchema = new Schema({
   medical_record_id: {
     type: Schema.Types.ObjectId,
     ref: 'MedicalRecord',
-    required: true
+    required: true,
   },
   smoker: {
     type: Boolean,
-    default: false
+    default: false,
   },
   smoking_details: {
     type: {
       type: String,
-      enum: ['Cigarette', 'Cigar', 'Pipe', 'E-cigarette', 'Other']
+      enum: ['Cigarette', 'Cigar', 'Pipe', 'E-cigarette', 'Other'],
     },
     frequency: String,
     years_smoking: Number,
-    quit_date: Date
+    quit_date: Date,
   },
   alcohol_user: {
     type: Boolean,
-    default: false
+    default: false,
   },
   alcohol_details: {
     frequency: String,
     type: [String],
-    amount: String
+    amount: String,
   },
   drug_user: {
     type: Boolean,
-    default: false
+    default: false,
   },
   drug_details: {
     substances: [String],
     frequency: String,
-    last_use: Date
+    last_use: Date,
   },
   marital_status: {
     type: String,
-    enum: ['Single', 'Married', 'Divorced', 'Widowed', 'Separated', 'Other']
+    enum: ['Single', 'Married', 'Divorced', 'Widowed', 'Separated', 'Other'],
   },
   occupation: String,
   work_environment_risks: [String],
@@ -50,42 +51,42 @@ const lifestyleSchema = new Schema({
     duration: Number,
     intensity: {
       type: String,
-      enum: ['Light', 'Moderate', 'Vigorous']
-    }
+      enum: ['Light', 'Moderate', 'Vigorous'],
+    },
   },
   diet: {
     type: String,
     restrictions: [String],
     allergies: [{
       type: Schema.Types.ObjectId,
-      ref: 'Allergy'
-    }]
+      ref: 'Allergy',
+    }],
   },
   sleep_pattern: {
     hours_per_night: Number,
     quality: {
       type: String,
-      enum: ['Poor', 'Fair', 'Good', 'Excellent']
+      enum: ['Poor', 'Fair', 'Good', 'Excellent'],
     },
-    issues: [String]
+    issues: [String],
   },
   stress_level: {
     type: String,
-    enum: ['Low', 'Moderate', 'High', 'Severe']
+    enum: ['Low', 'Moderate', 'High', 'Severe'],
   },
   sexual_activity: {
     active: Boolean,
     protection_used: Boolean,
-    risk_factors: [String]
+    risk_factors: [String],
   },
   last_updated: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  updated_by_doctor_id: String // External ID from PostgreSQL
+  updated_by_doctor_id: String, // External ID from PostgreSQL
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

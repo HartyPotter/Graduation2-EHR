@@ -1,49 +1,50 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const conditionSchema = new Schema({
   medical_record_id: {
     type: Schema.Types.ObjectId,
     ref: 'MedicalRecord',
-    required: true
+    required: true,
   },
   condition_name: {
     type: String,
-    required: true
+    required: true,
   },
   diagnosis_date: {
     type: Date,
-    required: true
+    required: true,
   },
   status: {
     type: String,
     enum: ['Active', 'Inactive', 'Remission'],
-    required: true
+    required: true,
   },
   notes: String,
   treated: {
     type: Boolean,
-    default: false
+    default: false,
   },
   diagnosing_doctor_id: {
     type: String, // External ID from PostgreSQL
-    required: true
+    required: true,
   },
   severity: {
     type: String,
     enum: ['Mild', 'Moderate', 'Severe'],
-    required: true
+    required: true,
   },
   last_assessment_date: Date,
   expected_duration: String,
   treatment_plan: String,
   related_conditions: [{
     type: Schema.Types.ObjectId,
-    ref: 'Condition'
-  }]
+    ref: 'Condition',
+  }],
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

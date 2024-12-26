@@ -21,7 +21,7 @@ export default [
       post_op_instructions,
       follow_up_date,
       emergency,
-      images
+      images,
     } = req.body;
 
     const doctor_id = req.body?.doctor_id;
@@ -50,7 +50,7 @@ export default [
       follow_up_date,
       emergency,
       images,
-      status: 'Scheduled'
+      status: 'Scheduled',
     });
 
     const savedSurgery = await surgery.save();
@@ -67,14 +67,14 @@ export default [
       document_id: savedSurgery._id,
       action: 'CREATE',
       changes: {
-        after: savedSurgery.toObject()
+        after: savedSurgery.toObject(),
       },
       doctor_id,
       reason: `New surgery scheduled: ${type}`,
       access_type: emergency ? 'Emergency' : 'Regular',
-      req
+      req,
     });
 
     return sendSuccess(res, savedSurgery, 'Surgery scheduled successfully', 201);
-  })
+  }),
 ];

@@ -21,7 +21,7 @@ export default [
       contraindications,
       refills_remaining,
       pharmacy_notes,
-      prescription_id
+      prescription_id,
     } = req.body;
 
     // doctor id should be provided after authentication and authorization
@@ -51,7 +51,7 @@ export default [
       refills_remaining,
       pharmacy_notes,
       prescription_id,
-      status: 'Active'
+      status: 'Active',
     });
 
     const savedMedication = await medication.save();
@@ -68,13 +68,13 @@ export default [
       document_id: savedMedication._id,
       action: 'CREATE',
       changes: {
-        after: savedMedication.toObject()
+        after: savedMedication.toObject(),
       },
       doctor_id,
       reason: `New medication prescribed: ${medication_name}`,
-      req
+      req,
     });
 
     return sendSuccess(res, savedMedication, 'Medication prescribed successfully', 201);
-  })
+  }),
 ];

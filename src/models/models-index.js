@@ -15,5 +15,5 @@ export {
   Surgery,
   Visit,
   Allergy,
-  Lifestyle
+  Lifestyle,
 };

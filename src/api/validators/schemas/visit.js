@@ -27,10 +27,10 @@ export const createVisitSchema = {
       respiratory_rate: Joi.number(),
       temperature: Joi.number(),
       oxygen_saturation: Joi.number(),
-      weight: Joi.number()
+      weight: Joi.number(),
     }),
     duration: Joi.number().min(0), // in minutes
     follow_up_needed: Joi.boolean().default(false),
-    follow_up_date: Joi.date().iso().min(Joi.ref('date'))
-  }
-}
+    follow_up_date: Joi.date().iso().min(Joi.ref('date')),
+  },
+};

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import mongoose from 'mongoose';
 import { dbUri } from '../config/config.js';
 
@@ -11,10 +12,10 @@ const setupDatabase = async () => {
     const collections = await mongoose.connection.db.collections();
 
     // Drop each collection
-    for (let collection of collections) {
+    await Promise.all(collections.map(async collection => {
       await collection.drop();
       console.log(`Dropped collection: ${collection.collectionName}`);
-    }
+    }));
 
     console.log('Database reset complete');
     process.exit(0);

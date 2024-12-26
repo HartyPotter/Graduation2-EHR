@@ -1,42 +1,43 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const medicalRecordSchema = new Schema({
   patient_id: {
     type: String, // External ID from PostgreSQL
     required: true,
-    unique: true
+    unique: true,
   },
   medical_conditions: [{
     type: Schema.Types.ObjectId,
-    ref: 'Condition'
+    ref: 'Condition',
   }],
   allergies: [{
     type: Schema.Types.ObjectId,
-    ref: 'Allergy'
+    ref: 'Allergy',
   }],
   medications: [{
     type: Schema.Types.ObjectId,
-    ref: 'Medication'
+    ref: 'Medication',
   }],
   surgeries: [{
     type: Schema.Types.ObjectId,
-    ref: 'Surgery'
+    ref: 'Surgery',
   }],
   visits: [{
     type: Schema.Types.ObjectId,
-    ref: 'Visit'
+    ref: 'Visit',
   }],
   blood_type: String,
   weight: Number,
   height: Number,
   lifestyle: {
     type: Schema.Types.ObjectId,
-    ref: 'Lifestyle'
-  }
+    ref: 'Lifestyle',
+  },
 }, {
   timestamps: true,
-  versionKey: 'version'
+  versionKey: 'version',
 });
 
 // Indexes

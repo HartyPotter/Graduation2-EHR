@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 export const createConditionSchema = {
-  body:{
+  body: {
     medical_record_id: Joi.string().required(),
     condition_name: Joi.string().required(),
     diagnosis_date: Joi.date().iso().max('now'),
@@ -19,6 +19,6 @@ export const createConditionSchema = {
       'Life-threatening'
     ),
     treatment_plan: Joi.string(),
-    expected_duration: Joi.string()
-  }
-}
+    expected_duration: Joi.string(),
+  },
+};

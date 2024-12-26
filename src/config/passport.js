@@ -21,12 +21,17 @@
 //         console.log(payload);
 
 //         // Check token expiration
-//         if (Date.now() > payload.exp * 1000) return done(new utils.UnauthorizedError({ message: "Token Expired", expired: true }));
+//         if (Date.now() > payload.exp * 1000) {
+//           return done(new utils.UnauthorizedError({
+//             message: "Token Expired",
+//             expired: true
+//           }));
+//         }
 
 //         // Find user in db
 //         const user = await User.findByPk(payload.id);
-        
-//         // If found, return user to callback 
+
+//         // If found, return user to callback
 //         if (!user) return done(new utils.NotFoundError("User not found"));
 
 //         // Else, throw not found error
