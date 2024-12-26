@@ -32,12 +32,12 @@ jobs:
           docker push $DOCKER_IMAGE_NAME:$IMAGE_TAG
 
       # Run the Docker container with runtime secrets
-      - name: Run Docker container with secrets
-        run: |
-          docker run -d \
-            -e DB_URI="${{ secrets.DB_URI }}" \
-            -e JWT_ACCESS_SECRET_KEY="${{ secrets.JWT_ACCESS_SECRET_KEY }}" \
-            -e JWT_REFRESH_SECRET_KEY="${{ secrets.JWT_REFRESH_SECRET_KEY }}" \
-            -e JWT_RESET_SECRET_KEY="${{ secrets.JWT_RESET_SECRET_KEY }}" \
-            -p 3000:3000 \
-            $DOCKER_IMAGE_NAME:$IMAGE_TAG
+      # - name: Run Docker container with secrets
+      #   run: |
+      #     docker run -d \
+      #       -e DB_URI="${{ secrets.DB_URI }}" \
+      #       -e JWT_ACCESS_SECRET_KEY="${{ secrets.JWT_ACCESS_SECRET_KEY }}" \
+      #       -e JWT_REFRESH_SECRET_KEY="${{ secrets.JWT_REFRESH_SECRET_KEY }}" \
+      #       -e JWT_RESET_SECRET_KEY="${{ secrets.JWT_RESET_SECRET_KEY }}" \
+      #       -p 3000:3000 \
+      #       $DOCKER_IMAGE_NAME:$IMAGE_TAG
