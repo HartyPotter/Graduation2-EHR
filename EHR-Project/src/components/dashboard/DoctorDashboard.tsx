@@ -2,7 +2,7 @@ import React from 'react';
 import { Toaster } from "react-hot-toast";
 import { NavLink } from 'react-router-dom';
 
-const Dashboard: React.FC = () => (
+const DoctorDashboard: React.FC = () => (
   <div className="flex flex-col items-center justify-center min-h-screen p-4">
     <div className="w-full max-w-3xl">
       <h2 className="text-4xl lg:text-6xl text-center text-blue-700 my-5">
@@ -37,4 +37,4 @@ const Dashboard: React.FC = () => (
   </div>
 );
 
-export default Dashboard;
+export default DoctorDashboard;

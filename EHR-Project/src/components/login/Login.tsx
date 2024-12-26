@@ -2,11 +2,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
-import { NavLink, useNavigate} from "react-router-dom";
-import ToggleSwitch from "./toggleswitch";
+import { NavLink, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-
-
+import React from "react";
 
 interface LoginFormInputs {
   email: string;
@@ -14,7 +12,8 @@ interface LoginFormInputs {
 }
 
 const API_ENDPOINTS = {
-  LOGIN: "/api/doctor/login",
+  LOGIN_Doc: "/api/doctor/login",
+  LOGIN_Patient: "/api/patient/login",
 };
 
 const validationSchema = Yup.object().shape({
@@ -25,30 +24,37 @@ const validationSchema = Yup.object().shape({
 });
 
 function LoginForm() {
-
   const navigate = useNavigate();
+  const [role, setRole] = React.useState<string>('doctor');
 
   const api = axios.create({
     baseURL: "http://localhost:3000",
     withCredentials: true,
   });
 
-  
-
   const handleSubmit = async (values: LoginFormInputs) => {
     try {
       console.log(values);
-      // delete values.y;
-      const response = await api.post(API_ENDPOINTS.LOGIN, values);
-  
+      if (role === "doctor") {
+      const response = await api.post(API_ENDPOINTS.LOGIN_Doc, values);
+
       if (response.status === 200 && response.data.data) {
         Cookies.set("accessToken", response.data.data.accessToken, { expires: 7, secure: true });
-        Cookies.set("refreshToken", response.data.data.refreshToken, { expires: 30, secure: true });        
-  
+        Cookies.set("refreshToken", response.data.data.refreshToken, { expires: 30, secure: true });
+
         toast.success("Login successful!");
+        navigate("/DoctorDashboard");
+      }
+        } else if (role === "patient") {
+          const response = await api.post(API_ENDPOINTS.LOGIN_Patient, values);
 
-
-        navigate("/dashboard");
+          if (response.status === 200 && response.data.data) {
+            Cookies.set("accessToken", response.data.data.accessToken, { expires: 7, secure: true });
+            Cookies.set("refreshToken", response.data.data.refreshToken, { expires: 30, secure: true });
+    
+            toast.success("Login successful!");
+            navigate("/PatientDashboard");
+        }
       } else {
         throw new Error("Invalid response format.");
       }
@@ -62,11 +68,9 @@ function LoginForm() {
           toast.error(error.response.data?.message || "Login failed. Please try again.");
         }
       }
-      
     }
   };
 
-  
   const handleForgotPassword = () => {
     toast.success("Reset link sent to your email.");
   };
@@ -76,9 +80,7 @@ function LoginForm() {
       <div className="w-full max-w-lg bg-white shadow-lg shadow-slate-800 rounded-lg">
         <div className="border-4 border-[#415BE7] rounded-lg">
           <div className="p-8 space-y-8">
-            <h2 className="text-3xl text-center text-black-900 my-5">
-              Log In To Your Account
-            </h2>
+            <h2 className="text-3xl text-center text-black-900 my-5">Log In To Your Account</h2>
             <div className="flex items-center justify-center space-x-4">
               <hr className="flex-grow border-t border-gray-300" />
               <span className="text-blue-600">Welcome Back!</span>
@@ -86,19 +88,14 @@ function LoginForm() {
             </div>
 
             <Formik
-              initialValues={{ email: "", password: ""}}
+              initialValues={{ email: "", password: "" }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
               {({ isSubmitting, values, setFieldValue }) => (
                 <Form className="space-y-6">
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Email:
-                    </label>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email:</label>
                     <Field
                       type="email"
                       id="email"
@@ -106,20 +103,11 @@ function LoginForm() {
                       className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
                       placeholder="you@example.com"
                     />
-                    <ErrorMessage
-                      name="email"
-                      component="p"
-                      className="text-sm text-red-500"
-                    />
+                    <ErrorMessage name="email" component="p" className="text-sm text-red-500" />
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Password:
-                    </label>
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password:</label>
                     <Field
                       type="password"
                       id="password"
@@ -127,16 +115,25 @@ function LoginForm() {
                       className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
                       placeholder="********"
                     />
-                    <ErrorMessage
-                      name="password"
-                      component="p"
-                      className="text-sm text-red-500"
-                    />
+                    <ErrorMessage name="password" component="p" className="text-sm text-red-500" />
+                  </div>
+
+                  <div>
+                    <label htmlFor="role" className="block text-sm font-medium text-gray-700">Select Role:</label>
+                    <select
+                      id="role"
+                      name="role"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
+                    >
+                      <option value="doctor">Doctor</option>
+                      <option value="patient">Patient</option>
+                    </select>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <label className="flex items-center">
-
                       <span className="ml-2 text-sm text-gray-700">Remember me</span>
                     </label>
                     <NavLink
@@ -162,9 +159,7 @@ function LoginForm() {
             <div className="mt-4 text-center">
               <span className="text-sm text-gray-700">
                 Don't have an account?{" "}
-                <NavLink to="/register" className="text-blue-500 hover:text-blue-700">
-                  Register
-                </NavLink>
+                <NavLink to="/register" className="text-blue-500 hover:text-blue-700">Register</NavLink>
               </span>
             </div>
 

@@ -12,7 +12,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-
 // Validation schema for Doctor form
 const doctorValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email format").required("Email is required"),
