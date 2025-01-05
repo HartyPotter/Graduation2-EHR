@@ -166,7 +166,7 @@ module.exports = {
     ],
 
     camelcase: [
-     'off'
+      'off',
     ],
     'no-return-assign': ['off'],
   },
