@@ -8,18 +8,18 @@ import {
 } from '../controllers/record/index.js';
 import {
   createVisit,
-  getAllVisits,
+  // getAllVisits,
   getVisit,
   // updateVisit,
-  deleteVisit,
+  // deleteVisit,
   // getAllVisits
 } from '../controllers/visit/index.js';
 import {
   createSurgery,
-  getSurgery,
+  // getSurgery,
   // updateSurgery,
   // deleteSurgery,
-  getAllSurgeries,
+  // getAllSurgeries,
 } from '../controllers/surgery/index.js';
 import {
   createMedication,
@@ -77,14 +77,14 @@ router.get(
   getVisit
 );
 
-router.get(
-  '/visits',
-  // authorize(RecordAuthorization.getAllVisits),
-  getAllVisits
-);
+// router.get(
+//   '/visits',
+//   // authorize(RecordAuthorization.getAllVisits),
+//   getAllVisits
+// );
 
 // router.put('/visits/:id', updateVisit);
-router.delete('/visits/:id', deleteVisit);
+// router.delete('/visits/:id', deleteVisit);
 
 // ---------------------- Surgery routes ---------------------- //
 router.post(
@@ -93,8 +93,8 @@ router.post(
   createSurgery
 );
 
-router.get('/surgeries', getAllSurgeries);
-router.get('/surgeries/:id', getSurgery);
+// router.get('/surgeries', getAllSurgeries);
+// router.get('/surgeries/:id', getSurgery);
 // router.put('/surgeries/:id', updateSurgery);
 // router.delete('/surgeries/:id', deleteSurgery);
 
