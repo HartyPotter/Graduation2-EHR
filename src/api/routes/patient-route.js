@@ -5,8 +5,14 @@ import { authorizeUser, authAccessToken } from '../middleware/middleware-index.j
 const router = Router();
 
 // AUTH
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', (req, res) => {
+    req.body.user.role = 'patient';
+    register(req, res);
+});
+router.post('/login', (req, res) => {
+    req.body.role = 'patient';
+    login(req, res);
+});
 
 router.post('/verify-email', verifyEmail);
 router.post('/resend-email', resendEmail);
@@ -30,7 +36,7 @@ router.post('/refreshToken', authAccessToken, refreshToken);
 router.post('/change-password', authAccessToken, changePassword);
 router.put('/edit', authAccessToken, editPatient);
 
-router.get('/get', authAccessToken, getPatient);
-router.delete('/delete', authAccessToken, deletePatient);
+router.get('/profile', authAccessToken, getPatient);
+router.delete('/delete', authAccessToken, authorizeUser("delete:user"), deletePatient);
 
 export default router

@@ -14,6 +14,7 @@ export function patientRegister(body) {
     photo_url: joi.string().uri(),
     insurance_number: joi.string(),
     phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' }),
+    role: joi.string().valid('patient').required()
   });
   return schema.validate(body);
 }
@@ -25,6 +26,7 @@ export function emergencyContactInfo(body) {
     gender: joi.string().valid('male', 'female').required(),
     address: joi.string().required(),
     national_id: joi.string().length(14).required(),
+    relation_to_patient: joi.string().required(),
     phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' }),
   });
   return schema.validate(body);
@@ -45,7 +47,8 @@ export function doctorRegister(body) {
     years_of_experience: joi.number().required(),
     phone_number: joi.string().phoneNumber({ defaultCountry: 'EG' }).required(),
     educational_background: joi.string().required(),
-    hospital_affiliations: joi.string().required()
+    hospital_affiliations: joi.string().required(),
+    role: joi.string().valid('doctor').required()
   });
   return schema.validate(body);
 }
@@ -53,7 +56,8 @@ export function doctorRegister(body) {
 export function patientLogin(body) {
   const schema = joi.object({
     email: joi.string().email().min(3).required(),
-    password: joi.string().min(6).max(20).required()
+    password: joi.string().min(6).max(20).required(),
+    role: joi.string().valid('patient').required()
   });
   return schema.validate(body);
 }
@@ -61,7 +65,8 @@ export function patientLogin(body) {
 export function doctorLogin(body) {
   const schema = joi.object({
     email: joi.string().email().min(3).required(),
-    password: joi.string().min(6).max(20).required()
+    password: joi.string().min(6).max(20).required(),
+    role: joi.string().valid('doctor').required()
   });
   return schema.validate(body);
 }

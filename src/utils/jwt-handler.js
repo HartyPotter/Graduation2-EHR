@@ -1,33 +1,53 @@
 import jwt from 'jsonwebtoken';
-import { jwtSecretKey, refreshTokenSecretKey, resetSecretKey } from '../../src/config/config.js';
+import { auth0_audience, jwtSecretKey, refreshTokenSecretKey, resetSecretKey } from '../../src/config/config.js';
 import { redisClient } from '../loaders/redis-loader.js';
 
+// export async function signAccessToken(userId, role) {
+//   const accessToken = jwt.sign(
+//     { id: userId, role},
+//     jwtSecretKey,
+//     {
+//       expiresIn: '30d',
+//     }
+//   );
+//   // // Stores the access token in a Redis cache for faster access to the logged in user without having to access the main DB
+//   // await redisClient.set(`accessToken:${userId}`, accessToken, { EX: 3600 });
+//   return accessToken;
+// };
+
 export async function signAccessToken(userId, role) {
-  const accessToken = jwt.sign(
-    { id: userId, role},
-    jwtSecretKey,
-    {
-      expiresIn: '30d',
-    }
-  );
-  // // Stores the access token in a Redis cache for faster access to the logged in user without having to access the main DB
-  // await redisClient.set(`accessToken:${userId}`, accessToken, { EX: 3600 });
-  return accessToken;
+  const token = await auth0.oauth.passwordGrant({
+    username: userId,
+    password: 'dummy-password', // Not used, just a placeholder
+    audience: auth0_audience,
+    scope: 'openid profile email',
+  });
+  return token.access_token;
 };
 
+
+// export async function signRefreshToken(userId, role) {
+//   const refreshToken = jwt.sign(
+//     { id: userId, role },
+//     refreshTokenSecretKey,
+//     {
+//       expiresIn: '30d',
+//     }
+//   );
+//   // // Stores the refresh token in a Redis cache for faster access to the logged in user without having to access the main DB
+//   await redisClient.set(`refreshToken:${userId}`, refreshToken, { EX: 604800 }); // refreshToken expires in 7 days
+//   return refreshToken;
+// };
 
 export async function signRefreshToken(userId, role) {
-  const refreshToken = jwt.sign(
-    { id: userId, role },
-    refreshTokenSecretKey,
-    {
-      expiresIn: '30d',
-    }
-  );
-  // // Stores the refresh token in a Redis cache for faster access to the logged in user without having to access the main DB
-  await redisClient.set(`refreshToken:${userId}`, refreshToken, { EX: 604800 }); // refreshToken expires in 7 days
-  return refreshToken;
-};
+  const token = await auth0.oauth.passwordGrant({
+    username: userId,
+    password: 'dummy-password', // Not used, just a placeholder
+    audience: auth0_audience,
+    scope: 'openid profile email offline_access',
+  });
+  return token.refresh_token;
+}
 
 
 export async function signResetToken(email) {

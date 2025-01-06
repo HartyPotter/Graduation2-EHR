@@ -5,8 +5,15 @@ import { authorizeUser, authAccessToken } from '../middleware/middleware-index.j
 const router = Router();
 
 // AUTH
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', (req, res) => {
+    req.body.user.role = 'doctor';
+    register(req, res);
+});
+
+router.post('/login', (req, res) => {
+    req.body.role = 'doctor';
+    login(req, res);
+});  
 
 router.post('/verify-email', verifyEmail);
 router.post('/resend-email', resendEmail);
@@ -19,9 +26,13 @@ router.get('/check-authentication', authAccessToken, (req, res) => {
     res.send({authenticated: true});
 })
 
-router.get('/check-authorization', authAccessToken, authorizeUser, (req, res) => {
-    res.send({authorized: true, role: req.user.role});
-})
+// router.get('/check-authorization', authAccessToken, authorizeUser, (req, res) => {
+//     res.send({authorized: true, role: req.user.role});
+// })
+
+router.get('/check-authorization', authAccessToken, authorizeUser('doctor'), (req, res) => {
+    res.send({ authorized: true, role: req.auth.payload.role });
+  });
 
 router.post('/refreshToken', authAccessToken, refreshToken);
 
@@ -30,7 +41,7 @@ router.post('/refreshToken', authAccessToken, refreshToken);
 router.post('/change-password', authAccessToken, changePassword);
 router.patch('/edit', authAccessToken, editDoctor);
 
-router.get('/get', authAccessToken, getDoctor);
+router.get('/profile', authAccessToken, getDoctor);
 router.delete('/delete', authAccessToken, deleteDoctor);
 
 export default router

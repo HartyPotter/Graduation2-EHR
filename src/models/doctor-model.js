@@ -19,10 +19,10 @@ Doctor.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    // password: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
     gender: {
       type: DataTypes.ENUM('male', 'female'),
     },

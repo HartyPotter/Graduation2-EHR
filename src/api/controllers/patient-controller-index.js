@@ -1,6 +1,6 @@
 // AUTH
-export { default as register } from './patient/register.js'
-export { default as login } from './patient/login.js'
+export { register } from './register.js'
+export { login } from './login.js'
 export { default as logout } from './patient/logout.js'
 export { default as verifyEmail } from './patient/verify-email.js'
 export { default as resendEmail } from './patient/resend-email-code.js'

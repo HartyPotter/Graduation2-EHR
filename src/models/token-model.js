@@ -19,7 +19,7 @@ Token.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
-  refresh_token: {
+  id_token: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,

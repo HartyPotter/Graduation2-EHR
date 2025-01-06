@@ -5,3 +5,5 @@
 /config
 /refactor_ideas
 package-lock.json
+/migrations
+req.http

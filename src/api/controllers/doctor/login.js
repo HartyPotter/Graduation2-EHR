@@ -3,6 +3,14 @@ import * as validate from '../../validators/user-validator.js';
 import * as utils from '../../../utils/utils-index.js'
 import bcrypt from 'bcrypt';
 import { redisClient } from '../../../loaders/redis-loader.js';
+import { AuthenticationClient } from 'auth0';
+import { auth0_domain, client_id, client_secret } from '../../../config/config.js';
+
+const auth0 = new AuthenticationClient({
+  domain: auth0_domain,
+  clientId: client_id,
+  clientSecret: client_secret,
+});
 
 export default async (req, res) => {
   try {
@@ -13,10 +21,12 @@ export default async (req, res) => {
       throw new utils.ValidationError(error.details[0].message);
     }
 
+    const { email, password } = req.body;
+
     // Find the user in the database
     const user = await Doctor.findOne({
       where: {
-        email: req.body.email,
+        email,
         is_verified: true,
         // is_activated: true,
       },
@@ -24,13 +34,25 @@ export default async (req, res) => {
 
     if (!user) throw new utils.NotFoundError('User not found or not verified');
 
-    // Check if password is correct
-    const match = await bcrypt.compare(req.body.password, user.password);
-    if (!match) throw new utils.ValidationError('Invalid password');
+    // Authenticate user with Auth0
+    const auth0Response = await auth0.oauth.passwordGrant({
+      username: email,
+      password,
+      audience: 'http://localhost:3000',
+      scope: 'openid profile email',
+    });
+    
+    console.log('Auth0 response:', auth0Response);
+
+    // // Check if password is correct
+    // const match = await bcrypt.compare(req.body.password, user.password);
+    // if (!match) throw new utils.ValidationError('Invalid password');
 
     // Generate tokens
-    const accessToken = await utils.signAccessToken(user.id, 'doctor');
-    const refreshToken = await utils.signRefreshToken(user.id, 'doctor');
+    // const accessToken = await utils.signAccessToken(user.id, 'doctor');
+    // const refreshToken = await utils.signRefreshToken(user.id, 'doctor');
+    const accessToken = auth0Response.access_token;
+    const refreshToken = auth0Response.refresh_token;
     
     // Get the user's IP address from the request
     const userIp = req.headers['x-forwarded-for'] || req.ip;

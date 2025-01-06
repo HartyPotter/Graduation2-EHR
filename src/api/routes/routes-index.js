@@ -4,8 +4,6 @@ import { serve, setup } from 'swagger-ui-express';
 import { specs, swaggerConfig } from '../../config/config.js';
 import patientRouter from './patient-route.js';
 import doctorRouter from './doctor-route.js';
-import { authAccessToken } from '../middleware/auth-middleware.js';
-import { authorizeUser } from '../middleware/access-middleware.js';
 const router = Router();
 
 const specDoc = swaggerJsdoc(swaggerConfig);
@@ -13,14 +11,10 @@ const specDoc = swaggerJsdoc(swaggerConfig);
 router.use(specs, serve);
 router.get(specs, setup(specDoc, { explorer: true }));
 
-// User routes
-router.get('/check-authentication', authAccessToken, (req, res, next) => {
-    res.send({authenticated: true});
-});
-router.get('/check-authorization', authAccessToken, authorizeUser, (req, res, next) => {
-    res.send({authorized: true, role: req.user.role});
-});
+// Patient Routes
 router.use('/patient', patientRouter);
+
+// Doctor Routes
 router.use('/doctor', doctorRouter);
 
 router.get('/test-error', (req, res, next) => {

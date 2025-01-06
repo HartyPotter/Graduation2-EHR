@@ -4,7 +4,8 @@ import * as utils from '../../../utils/utils-index.js';
 export default async (req, res) => {
     try {        
         // const user = req.user;
-        const user = await redisClient.hGet(`user:${req.user.id}`, "user");
+        console.log(req)
+        const user = await redisClient.hGet(`user:${req.auth.payload.sub}`, "user");
         // Send success response
         return utils.sendSuccess(res, 'Fetched user data successfully!', { user: JSON.parse(user) });
     } catch (error) {

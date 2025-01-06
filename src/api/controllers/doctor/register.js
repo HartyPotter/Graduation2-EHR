@@ -2,7 +2,15 @@ import { Doctor } from '../../../models/models-index.js';
 import * as validate from '../../validators/user-validator.js';
 import * as utils from '../../../utils/utils-index.js';
 import { redisClient } from '../../../loaders/redis-loader.js';
+import { ManagementClient } from 'auth0';
+import { auth0_domain, client_id, client_secret } from '../../../config/config.js';
 import bcrypt from 'bcrypt';
+
+const auth0 = new ManagementClient({
+  domain: auth0_domain,
+  clientId: client_id,
+  clientSecret: client_secret,
+});
 
 export default async (req, res) => {
   try {
@@ -19,6 +27,15 @@ export default async (req, res) => {
     if (exists) {
       throw new utils.ConflictError('User with this email already exists');
     }
+
+    // Create user in Auth0
+    const auth0User = await auth0.users.create({
+      email: req.body.email,
+      password: req.body.password,
+      connection: 'Username-Password-Authentication', // Default database connection
+    });
+
+    console.log('Auth0 user:', auth0User);
 
     // Hash the password
     const hashed = await bcrypt.hash(req.body.password, 10);
