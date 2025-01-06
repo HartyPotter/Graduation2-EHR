@@ -2,6 +2,7 @@ import Joi from 'joi';
 
 export const createVisitSchema = {
   body: {
+    patient_id: Joi.string().required(),
     medical_record_id: Joi.string().required(),
     date: Joi.date().iso().required().max('now'),
     visit_type: Joi.string().required().valid(
@@ -32,5 +33,18 @@ export const createVisitSchema = {
     duration: Joi.number().min(0), // in minutes
     follow_up_needed: Joi.boolean().default(false),
     follow_up_date: Joi.date().iso().min(Joi.ref('date')),
+  },
+};
+
+export const getAllVisitsSchema = {
+  query: {
+    limit: Joi.number().integer().min(-1).default(10),
+    skip: Joi.number().integer().min(0).default(0),
+  },
+};
+
+export const getVisitSchema = {
+  params: {
+    id: Joi.string().required(),
   },
 };

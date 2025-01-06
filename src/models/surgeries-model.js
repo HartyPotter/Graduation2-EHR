@@ -8,6 +8,10 @@ const surgerySchema = new Schema({
     ref: 'MedicalRecord',
     required: true,
   },
+  patient_id: {
+    type: String, // External ID from PostgreSQL
+    required: true,
+  },
   type: {
     type: String,
     required: true,

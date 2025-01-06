@@ -24,6 +24,10 @@ const visitSchema = new Schema({
     ref: 'MedicalRecord',
     required: true,
   },
+  patient_id: {
+    type: String,
+    required: true,
+  },
   doctor_id: {
     type: String, // External ID from PostgreSQL
     required: true,

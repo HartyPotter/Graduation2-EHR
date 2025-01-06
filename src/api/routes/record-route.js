@@ -8,17 +8,18 @@ import {
 } from '../controllers/record/index.js';
 import {
   createVisit,
-  // getVisit,
+  getAllVisits,
+  getVisit,
   // updateVisit,
-  // deleteVisit,
+  deleteVisit,
   // getAllVisits
 } from '../controllers/visit/index.js';
 import {
   createSurgery,
-  // getSurgery,
+  getSurgery,
   // updateSurgery,
   // deleteSurgery,
-  // getAllSurgeries
+  getAllSurgeries,
 } from '../controllers/surgery/index.js';
 import {
   createMedication,
@@ -46,16 +47,12 @@ import { authorize } from '../middleware/authorize.js';
 
 const router = express.Router();
 
-// Medical Records routes
-router.post(
-  '/medical-records',
-  authorize(RecordAuthorization.createRecord),
-  createRecord
-);
+// ---------------------- Medical Records ---------------------- //
+router.post('/medical-records', createRecord);
 
 router.get(
   '/medical-records/:id',
-  authorize(RecordAuthorization.getRecord),
+  // authorize(RecordAuthorization.getRecord),
   getRecord
 );
 
@@ -67,31 +64,41 @@ router.delete(
   deleteRecord
 );
 
-// Visit routes
+// ---------------------- Visit routes ---------------------- //
 router.post(
   '/visits',
-  authorize(RecordAuthorization.createVisit),
+  // authorize(RecordAuthorization.createVisit),
   createVisit
 );
 
-// router.get('/visits', getAllVisits);
-// router.get('/visits/:id', getVisit);
-// router.put('/visits/:id', updateVisit);
-// router.delete('/visits/:id', deleteVisit);
+router.get(
+  '/visits/:id',
+  // authorize(RecordAuthorization.getVisit),
+  getVisit
+);
 
-// Surgery routes
+router.get(
+  '/visits',
+  // authorize(RecordAuthorization.getAllVisits),
+  getAllVisits
+);
+
+// router.put('/visits/:id', updateVisit);
+router.delete('/visits/:id', deleteVisit);
+
+// ---------------------- Surgery routes ---------------------- //
 router.post(
   '/surgeries',
-  authorize(RecordAuthorization.createSurgery),
+  // authorize(RecordAuthorization.createSurgery),
   createSurgery
 );
 
-// router.get('/surgeries', getAllSurgeries);
-// router.get('/surgeries/:id', getSurgery);
+router.get('/surgeries', getAllSurgeries);
+router.get('/surgeries/:id', getSurgery);
 // router.put('/surgeries/:id', updateSurgery);
 // router.delete('/surgeries/:id', deleteSurgery);
 
-// Medication routes
+// ---------------------- Medication routes ---------------------- //
 router.post(
   '/medications',
   authorize(RecordAuthorization.createMedication),
@@ -103,7 +110,7 @@ router.post(
 // router.put('/medications/:id', updateMedication);
 // router.delete('/medications/:id', deleteMedication);
 
-// Allergy routes
+// ---------------------- Allergy routes ---------------------- //
 router.post(
   '/allergies',
   authorize(RecordAuthorization.createAllergy),
@@ -115,7 +122,7 @@ router.post(
 // router.put('/allergies/:id', updateAllergy);
 // router.delete('/allergies/:id', deleteAllergy);
 
-// Medical Conditions routes
+// ---------------------- Medical Conditions routes ---------------------- //
 router.post(
   '/conditions',
   authorize(RecordAuthorization.createCondition),
