@@ -42,13 +42,21 @@ import {
   // updateCondition,
   // deleteCondition
 } from '../controllers/condition/index.js';
-import RecordAuthorization from '../authorization/record-auth.js';
-import { authorize } from '../middleware/authorize.js';
+import { authAccessToken } from '../middleware/auth-middleware.js';
+import { authorizeUser } from '../middleware/access-middleware.js';
 
 const router = express.Router();
 
 // ---------------------- Medical Records ---------------------- //
-router.post('/medical-records', createRecord);
+router.post(
+  '/medical-records',
+  // (req, res) => {
+  //   console.log('Authenticated');
+  // },
+  authAccessToken,
+  authorizeUser('createRecord'),
+  createRecord
+);
 
 router.get(
   '/medical-records/:id',
@@ -60,7 +68,6 @@ router.get(
 
 router.delete(
   '/medical-records/:id',
-  authorize(RecordAuthorization.deleteRecord),
   deleteRecord
 );
 
@@ -101,7 +108,6 @@ router.post(
 // ---------------------- Medication routes ---------------------- //
 router.post(
   '/medications',
-  authorize(RecordAuthorization.createMedication),
   createMedication
 );
 
@@ -113,7 +119,6 @@ router.post(
 // ---------------------- Allergy routes ---------------------- //
 router.post(
   '/allergies',
-  authorize(RecordAuthorization.createAllergy),
   createAllergy
 );
 
@@ -125,7 +130,6 @@ router.post(
 // ---------------------- Medical Conditions routes ---------------------- //
 router.post(
   '/conditions',
-  authorize(RecordAuthorization.createCondition),
   createCondition
 );
 

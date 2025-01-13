@@ -10,6 +10,11 @@ const {
   AWS_SECRET_ACCESS_KEY,
   AWS_REGION,
   BUCKET_NAME,
+  AUTH0_DOMAIN,
+  AUTH0_DOMAIN2,
+  AUTH0_AUDIENCE,
+  CLIENT_ID,
+  CLIENT_SECRET,
 } = process.env;
 
 export const port = PORT || 3001;
@@ -22,3 +27,10 @@ export const dbUri = DB_URI;
 // export const bucketName = BUCKET_NAME;
 export const prefix = '/api';
 export const specs = '/docs';
+
+// AUTH0
+export const auth0_domain = AUTH0_DOMAIN;
+export const auth0_domain2 = AUTH0_DOMAIN2;
+export const auth0_audience = AUTH0_AUDIENCE;
+export const client_id = CLIENT_ID;
+export const client_secret = CLIENT_SECRET;
