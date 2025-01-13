@@ -1,7 +1,16 @@
 import * as utils from '../../utils/utils-index.js';
 import { Doctor } from '../../models/models-index.js'
 import * as validate from '../validators/user-validator.js';
+import { auth0_domain, client_id } from '../../config/config.js';
+import axios from 'axios';
 
+const requestPasswordChange = async (email) => {
+    await axios.post(`${auth0_domain}/dbconnections/change_password`, {
+        client_id, // Required: Your Auth0 client ID
+        email: email, // Required: User's email address
+        connection: 'Username-Password-Authentication', // Required: The name of the database connection
+    });
+}
 
 export const forgotPassword = async (req, res) => {
     try {
@@ -14,10 +23,11 @@ export const forgotPassword = async (req, res) => {
     
         // Request a password reset
         // await utils.auth0Authentication.database.changePassword()
-        await utils.auth0Authentication.database.changePassword({
-            email,
-            connection: 'Username-Password-Authentication',
-        });
+        // await utils.auth0Authentication.database.changePassword({
+        //     email,
+        //     connection: 'Username-Password-Authentication',
+        // });
+        await requestPasswordChange(email);
     
         // Send success response
         return utils.sendSuccess(res, 'Reset link was sent successfully!');

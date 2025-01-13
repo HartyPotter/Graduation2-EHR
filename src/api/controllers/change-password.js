@@ -29,7 +29,7 @@ export const changePassword = async (req, res) => {
         // Initiate a password change
         await requestPasswordChange(email);
 
-        await utils.userManager.deleteAllAuthenticators({ id: userId });
+        // await utils.userManager.deleteAllAuthenticators({ id: userId });
         // if (deleteAuthenticators) {
         //     // Optionally, invalidate the user's existing sessions or tokens
         // }
