@@ -1,6 +1,6 @@
-import * as utils from '../../../utils/utils-index.js';
-import { Doctor } from '../../../models/models-index.js'
-import * as validate from '../../validators/user-validator.js';
+import * as utils from '../../utils/utils-index.js';
+import { Doctor } from '../../models/models-index.js'
+import * as validate from '../validators/user-validator.js';
 
 
 export const forgotPassword = async (req, res) => {
@@ -13,7 +13,8 @@ export const forgotPassword = async (req, res) => {
         const { email } = req.body;
     
         // Request a password reset
-        await auth0Authentication.database.changePassword({
+        // await utils.auth0Authentication.database.changePassword()
+        await utils.auth0Authentication.database.changePassword({
             email,
             connection: 'Username-Password-Authentication',
         });

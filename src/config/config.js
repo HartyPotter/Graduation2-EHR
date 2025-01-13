@@ -17,6 +17,7 @@ const {
     REDIS_PORT,
     REDIS_PASS,
     AUTH0_DOMAIN,
+    AUTH0_DOMAIN2,
     AUTH0_AUDIENCE,
     CLIENT_ID,
     CLIENT_SECRET
@@ -45,6 +46,7 @@ export const redisPass = REDIS_PASS
 
 // AUTH0
 export const auth0_domain = AUTH0_DOMAIN
+export const auth0_domain2 = AUTH0_DOMAIN2
 export const auth0_audience = AUTH0_AUDIENCE
 export const client_id = CLIENT_ID
 export const client_secret = CLIENT_SECRET

@@ -32,7 +32,7 @@ export default async (req, res) => {
       },
     });
 
-    if (!user) throw new utils.NotFoundError('User not found or not verified');
+    if (!user) throw new  utils.NotFoundError('User not found or not verified');
 
     // Authenticate user with Auth0
     const auth0Response = await auth0.oauth.passwordGrant({

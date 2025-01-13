@@ -1,18 +1,9 @@
 import { default as sequelize } from '../../loaders/postgres-loader.js';
-import { ManagementClient } from 'auth0';
 import * as utils from '../../utils/utils-index.js';
 import { Doctor, Patient, Contact, PatientContact } from '../../models/models-index.js';
 import * as validate from '../validators/user-validator.js';
-import { auth0_domain, client_id, client_secret } from '../../config/config.js';
 import { createMedicalRecord } from '../../interfaces/patient/create-medical-record.js';
 
-
-const auth0Management = new ManagementClient({
-  domain: auth0_domain,
-  clientId: client_id,
-  clientSecret: client_secret,
-  // scope: 'create:users read:users update:users delete:users',
-});
 
 export const register = async (req, res) => {
   try {
@@ -39,7 +30,7 @@ export const register = async (req, res) => {
     if (exists) throw new utils.ConflictError('User with this email already exists');
 
     // Create user in Auth0
-    const auth0User = await auth0Management.users.create({
+    const auth0User = await utils.auth0Management.users.create({
       email: req_user.email,
       password: req_user.password, // Auth0 handles password hashing
       connection: 'Username-Password-Authentication',
@@ -49,7 +40,7 @@ export const register = async (req, res) => {
 
     // Assign role to the user
     const roleId = req_user.role === 'doctor' ? 'rol_nbukgm8to015vJ7W' : 'rol_3YiZALY75IduFkBo';
-    await auth0Management.users.assignRoles({ id: auth0User.data.user_id }, { roles: [roleId] });
+    await utils.auth0Management.users.assignRoles({ id: auth0User.data.user_id }, { roles: [roleId] });
 
     // Create user in your database (without password)
     let user;
@@ -139,7 +130,7 @@ export const register = async (req, res) => {
     
     // Delete user from Auth0 if user creation fails
     if (error.name === 'Auth0Error' && auth0User?.data?.user_id) {
-      await auth0Management.users.delete({ id: auth0User.data.user_id });
+      await utils.auth0Management.users.delete({ id: auth0User.data.user_id });
     }
     return utils.sendError(res, error);
   }

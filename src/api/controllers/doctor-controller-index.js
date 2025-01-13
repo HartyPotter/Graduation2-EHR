@@ -4,7 +4,7 @@ export { login } from './login.js'
 export { default as logout } from './doctor/logout.js'
 export { default as verifyEmail } from './doctor/verify-email.js'
 export { default as resendEmail } from './doctor/resend-email-code.js'
-export { default as forgotPassword } from './doctor/forgot-password.js'
+export { forgotPassword } from './doctor/forgot-password.js'
 export { default as resetPassword } from './doctor/reset-password.js'
 export { default as refreshToken } from './doctor/refresh-accessToken.js'
 // // EDIT

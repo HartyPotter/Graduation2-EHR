@@ -22,6 +22,7 @@ router.post('/reset-password', resetPassword);
 router.post('/logout', authAccessToken, logout);
 
 router.get('/check-authentication', authAccessToken, (req, res) => {
+    console.log(req.user);
     res.send({authenticated: true});
 })
 

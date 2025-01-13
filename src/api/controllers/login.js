@@ -2,17 +2,8 @@ import { Patient, Doctor, Token } from '../../models/models-index.js';
 import * as validate from '../validators/user-validator.js';
 import * as utils from '../../utils/utils-index.js'
 import { redisClient } from '../../loaders/redis-loader.js';
-import { ManagementClient } from 'auth0';
-import { auth0_domain, client_id, client_secret, auth0_audience} from '../../config/config.js';
-import { AuthenticationClient } from 'auth0';
 import { default as sequelize} from '../../loaders/postgres-loader.js';
-  
-const auth0Authentication = new AuthenticationClient({
-    domain: auth0_domain,
-    clientId: client_id,
-    clientSecret: client_secret,
-});
-
+import { auth0_audience } from '../../config/config.js';
 
 export const login = async (req, res) => {
   let transaction;
@@ -28,7 +19,7 @@ export const login = async (req, res) => {
     const { email, password, role } = req.body;
 
     // Authenticate with Auth0
-    const { data: auth0Response } = await auth0Authentication.oauth.passwordGrant({
+    const { data: auth0Response } = await utils.auth0Authentication.oauth.passwordGrant({
       username: email,
       password,
       audience: auth0_audience,
