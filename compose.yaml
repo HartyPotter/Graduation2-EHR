@@ -28,3 +28,7 @@ services:
       - REDIS_HOST="redis-14068.c239.us-east-1-2.ec2.redns.redis-cloud.com"
       - REDIS_PORT=14068
       - REDIS_PASS='OS29hReaPP6e75raJEoh7qAsX8MNt5gM'
+      - AUTH0_DOMAIN="https://ehr-ai.eu.auth0.com"
+      - AUTH0_AUDIENCE="http://localhost:3000"
+      - CLIENT_ID='G4nrb4K21vh8YLEoYZqn2O11LMWdyxlc'
+      - CLIENT_SECRET='mWKeOq3D48IaT5AZtlpxPj9J6j4CP0oFmFpp8r_c-53OOW5r_mXZY5MINl0DME4E'
