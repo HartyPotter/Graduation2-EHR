@@ -3,7 +3,6 @@ import Joi from 'joi';
 export const createVisitSchema = {
   body: {
     patient_id: Joi.string().required(),
-    medical_record_id: Joi.string().required(),
     date: Joi.date().iso().required().max('now'),
     visit_type: Joi.string().required().valid(
       'Regular',
