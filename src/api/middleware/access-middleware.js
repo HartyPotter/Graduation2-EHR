@@ -7,7 +7,6 @@ import * as utils from '../../utils/utils-index.js';
 // eslint-disable-next-line consistent-return
 export const authorizeUser = requiredRole => (req, res, next) => {
   try {
-    console.log('wslna');
     // Extract the user's role from the token payload
     const { role } = req.auth.payload;
 
