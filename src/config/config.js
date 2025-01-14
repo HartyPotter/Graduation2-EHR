@@ -6,15 +6,15 @@ config();
 const {
   DB_URI, PORT, JWT_SECRET_KEY,
   REFRESH_TOKEN_SECRET_KEY,
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
-  AWS_REGION,
-  BUCKET_NAME,
   AUTH0_DOMAIN,
   AUTH0_DOMAIN2,
   AUTH0_AUDIENCE,
   CLIENT_ID,
   CLIENT_SECRET,
+  PG_DB_URI,
+  REDIS_HOST,
+  REDIS_PORT,
+  REDIS_PASS,
 } = process.env;
 
 export const port = PORT || 3001;
@@ -34,3 +34,11 @@ export const auth0_domain2 = AUTH0_DOMAIN2;
 export const auth0_audience = AUTH0_AUDIENCE;
 export const client_id = CLIENT_ID;
 export const client_secret = CLIENT_SECRET;
+
+// Postgres
+export const pg_db_uri = PG_DB_URI;
+
+// Redis
+export const redisHost = REDIS_HOST;
+export const redisPort = REDIS_PORT;
+export const redisPass = REDIS_PASS;
