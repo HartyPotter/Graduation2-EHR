@@ -30,11 +30,20 @@ const getAllVisits = async (req, res, next) => {
       throw new NotFoundError('Visits');
     }
 
+    const doctor = await getUserFromRedis(visits[0].doctor_id);
+
     visits = await Promise.all(visits.map(async aVisit => ({
       ...aVisit,
-      patient,
-      doctor: await getUserFromRedis(aVisit.doctor_id),
-      specialization: 'Abousaad',
+      patient: {
+        id: patient.id,
+        full_name: patient.full_name,
+      },
+      doctor: {
+        id: doctor.id,
+        full_name: doctor.full_name,
+        specialization: doctor.specialization,
+        hospital_affiliations: doctor.hospital_affiliations,
+      },
     })));
 
     return sendSuccess(res, visits);
