@@ -1,8 +1,11 @@
 import React from 'react';
 import { Toaster } from "react-hot-toast";
 import { NavLink } from 'react-router-dom';
+import PatientNavbar from '../Navbar/PatientNavbar';
 
 const DoctorDashboard: React.FC = () => (
+  <div>
+  <PatientNavbar />
   <div className="flex flex-col items-center justify-center min-h-screen p-4">
     <div className="w-full max-w-3xl">
       <h2 className="text-4xl lg:text-6xl text-center text-blue-700 my-5">
@@ -18,7 +21,7 @@ const DoctorDashboard: React.FC = () => (
           Add Patient
         </NavLink>
         <NavLink
-          to="#"
+          to="/AiHistory"
           className="text-lg lg:text-xl text-gray-700 hover:text-blue-500"
         >
           Generate History Summary
@@ -34,6 +37,7 @@ const DoctorDashboard: React.FC = () => (
       {/* React Hot Toast notifications */}
       <Toaster position="top-center" />
     </div>
+  </div>
   </div>
 );
 

@@ -9,6 +9,7 @@ import PatientDashboard from "./components/dashboard/PatientDashboard";
 import PastExaminations from "./components/PatientPages/PastExaminations";
 import TestsAndXrays from "./components/PatientPages/TestsAndXrays"
 import RequestAddition from "./components/PatientPages/RequestAddition"
+import AiHistory from "./components/History/AiHistory";
 function App() {
   return (
     <Routes>
@@ -21,6 +22,7 @@ function App() {
       <Route path="/PastExaminations" element={<PrivateRoute element={<PastExaminations />} />} />
       <Route path="/TestsAndXrays" element={<PrivateRoute element={<TestsAndXrays />} />} />
       <Route path="/RequestAddition" element={<PrivateRoute element={<RequestAddition />} />} />
+      <Route path="/AiHistory" element={<PrivateRoute element={<AiHistory />} />} />
 
       <Route path="*" element={<div>Page Not Found</div>} />
     </Routes>
