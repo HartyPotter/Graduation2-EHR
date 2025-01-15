@@ -50,10 +50,25 @@ const router = express.Router();
 // ---------------------- Medical Records ---------------------- //
 router.post(
   '/medical-records',
-  // (req, res) => {
-  //   console.log('Authenticated');
-  // },
+  (req, res) => {
+    console.log('Authenticated');
+    console.log(req.auth.payload);
+    next();
+  },
   authAccessToken,
+  authorizeUser('create:record'),
+  createRecord
+);
+
+router.post(
+  '/test',
+  authAccessToken,
+  (req, res) => {
+    console.log('Authenticated');
+    console.log('AAAAAHHHHHHHHHHHHHHHHA');
+    console.log(req.auth);
+    next();
+  },
   authorizeUser('createRecord'),
   createRecord
 );
