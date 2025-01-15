@@ -12,7 +12,7 @@ import {
   getVisit,
   // updateVisit,
   // deleteVisit,
-  // getAllVisits
+  getAllVisits,
 } from '../controllers/visit/index.js';
 import {
   createSurgery,
@@ -50,26 +50,8 @@ const router = express.Router();
 // ---------------------- Medical Records ---------------------- //
 router.post(
   '/medical-records',
-  (req, res) => {
-    console.log('Authenticated');
-    console.log(req.auth.payload);
-    next();
-  },
   authAccessToken,
-  authorizeUser('create:record'),
-  createRecord
-);
-
-router.post(
-  '/test',
-  authAccessToken,
-  (req, res) => {
-    console.log('Authenticated');
-    console.log('AAAAAHHHHHHHHHHHHHHHHA');
-    console.log(req.auth);
-    next();
-  },
-  authorizeUser('createRecord'),
+  // authorizeUser('createRecord'),
   createRecord
 );
 
@@ -89,6 +71,7 @@ router.delete(
 // ---------------------- Visit routes ---------------------- //
 router.post(
   '/visits',
+  authAccessToken,
   // authorize(RecordAuthorization.createVisit),
   createVisit
 );
@@ -99,11 +82,12 @@ router.get(
   getVisit
 );
 
-// router.get(
-//   '/visits',
-//   // authorize(RecordAuthorization.getAllVisits),
-//   getAllVisits
-// );
+router.get(
+  '/visits',
+  authAccessToken,
+  // authorize(RecordAuthorization.getAllVisits),
+  getAllVisits
+);
 
 // router.put('/visits/:id', updateVisit);
 // router.delete('/visits/:id', deleteVisit);

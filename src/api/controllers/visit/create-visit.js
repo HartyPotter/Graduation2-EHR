@@ -1,7 +1,7 @@
 import { Visit, MedicalRecord } from '../../../models/models-index.js';
 import { sendSuccess, asyncHandler } from '../../../utils/response-handler.js';
 import { createAuditLog } from '../../../utils/audit-logger.js';
-import { NotFoundError, ValidationError } from '../../../utils/errors.js';
+import { NotFoundError } from '../../../utils/errors.js';
 import { validate } from '../../validators/validator.js';
 import { createVisitSchema } from '../../validators/schemas/index.js';
 
@@ -9,7 +9,6 @@ const createVisit = async (req, res) => {
   validate(createVisitSchema);
   const {
     patient_id,
-    medical_record_id,
     date,
     visit_type,
     reason,
@@ -28,16 +27,15 @@ const createVisit = async (req, res) => {
     follow_up_date,
   } = req.body;
 
-  const doctor_id = req.body?.doctor_id;
-  if (!doctor_id) {
-    throw new ValidationError('Doctor ID not provided', { field: 'doctor_id' });
-  }
+  const doctor_id = req.auth.payload.sub;
 
   // Verify medical record exists
-  const medicalRecord = await MedicalRecord.findById(medical_record_id);
+  const medicalRecord = await MedicalRecord.findOne({ patient_id }, { _id: 1 }).lean();
   if (!medicalRecord) {
-    throw new NotFoundError('Medical Record', medical_record_id);
+    throw new NotFoundError('Medical Record', medicalRecord);
   }
+
+  const medical_record_id = medicalRecord._id;
 
   const visit = new Visit({
     patient_id,
