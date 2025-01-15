@@ -22,7 +22,7 @@ export const login = async (req, res) => {
     const { data: auth0Response } = await utils.auth0Authentication.oauth.passwordGrant({
       username: email,
       password,
-      audience: auth0_audience,
+      // audience: auth0_audience,
       scope: 'openid profile email',
       connection: 'Username-Password-Authentication', // Add this line
     });
