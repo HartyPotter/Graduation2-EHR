@@ -41,17 +41,17 @@ export const login = async (req, res) => {
     const userIp = req.headers['x-forwarded-for'] || req.ip;
 
     // Update or insert the refresh token in the database
-  //   await Token.upsert({
-  //     user_id: user.id,
-  //     id_token: auth0Response.id_token,
-  //     user_type: role,
-  //     valid: true,
-  //     expires_in: new Date(Date.now() + 4 * 604800000), // 7 days
-  //     created_at: new Date(),
-  //     created_by_ip: userIp,
-  //   },
-  //   { transaction }
-  // );
+    // await Token.upsert({
+    //   user_id: user.id,
+    //   id_token: auth0Response.id_token,
+    //   user_type: role,
+    //   valid: true,
+    //   expires_in: new Date(Date.now() + 4 * 604800000), // 7 days
+    //   created_at: new Date(),
+    //   created_by_ip: userIp,
+    // },
+    // { transaction }
+    // );
 
     await transaction.commit();
 
@@ -62,6 +62,21 @@ export const login = async (req, res) => {
     });
 
     await redisClient.expire(`user:${user.id}`, 2592000); // 30 days
+
+    // Set access and ID tokens as secure, HttpOnly cookies
+    res.cookie('accessToken', auth0Response.access_token, {
+      httpOnly: true,
+      secure: true, // Ensure cookies are only sent over HTTPS
+      maxAge: 3600000 * 24 * 30, // 1 hour
+      sameSite: 'strict', // Prevent CSRF attacks
+    });
+
+    res.cookie('idToken', auth0Response.id_token, {
+      httpOnly: true,
+      secure: true, // Ensure cookies are only sent over HTTPS
+      maxAge: 3600000 * 24 * 30, // 1 hour
+      sameSite: 'strict', // Prevent CSRF attacks
+    });
 
     // Send successful response
     return utils.sendSuccess(res, 'Login successful', {
