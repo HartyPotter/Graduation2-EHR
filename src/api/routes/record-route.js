@@ -50,7 +50,7 @@ const router = express.Router();
 // ---------------------- Medical Records ---------------------- //
 router.post(
   '/medical-records',
-  authAccessToken,
+  // authAccessToken,
   // authorizeUser('createRecord'),
   createRecord
 );
@@ -71,7 +71,7 @@ router.delete(
 // ---------------------- Visit routes ---------------------- //
 router.post(
   '/visits',
-  authAccessToken,
+  // authAccessToken,
   // authorize(RecordAuthorization.createVisit),
   createVisit
 );
