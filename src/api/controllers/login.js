@@ -71,7 +71,7 @@ export const login = async (req, res) => {
     //   sameSite: 'none', // Prevent CSRF attacks
     // });
 
-    res.cookie("accessToken", accessToken, {
+    res.cookie("accessToken", auth0Response.access_token, {
       httpOnly: true,     // Prevent access to the cookie from JavaScript
       secure: false,       // Send the cookie over HTTPS only
       sameSite: "lax",  // Prevent CSRF attacks
@@ -79,7 +79,7 @@ export const login = async (req, res) => {
       path: "/"
     });
     
-    res.cookie("idToken", accessToken, {
+    res.cookie("idToken", auth0Response.id_token, {
       httpOnly: true,     // Prevent access to the cookie from JavaScript
       secure: false,       // Send the cookie over HTTPS only
       sameSite: "lax",  // Prevent CSRF attacks
