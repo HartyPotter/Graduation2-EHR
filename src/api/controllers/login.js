@@ -66,14 +66,14 @@ export const login = async (req, res) => {
     // Set access and ID tokens as secure, HttpOnly cookies
     res.cookie('accessToken', auth0Response.access_token, {
       httpOnly: true,
-      secure: true, // Ensure cookies are only sent over HTTPS
+      secure: false, // Ensure cookies are only sent over HTTPS
       maxAge: 3600000 * 24 * 30, // 1 hour
       sameSite: 'none', // Prevent CSRF attacks
     });
 
     res.cookie('idToken', auth0Response.id_token, {
       httpOnly: true,
-      secure: true, // Ensure cookies are only sent over HTTPS
+      secure: false, // Ensure cookies are only sent over HTTPS
       maxAge: 3600000 * 24 * 30, // 1 hour
       sameSite: 'none', // Prevent CSRF attacks
     });
