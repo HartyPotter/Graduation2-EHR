@@ -64,19 +64,35 @@ export const login = async (req, res) => {
     await redisClient.expire(`user:${user.id}`, 2592000); // 30 days
 
     // Set access and ID tokens as secure, HttpOnly cookies
-    res.cookie('accessToken', auth0Response.access_token, {
-      httpOnly: true,
-      secure: false, // Ensure cookies are only sent over HTTPS
+    // res.cookie('accessToken', auth0Response.access_token, {
+    //   httpOnly: true,
+    //   secure: false, // Ensure cookies are only sent over HTTPS
+    //   maxAge: 3600000 * 24 * 30, // 1 hour
+    //   sameSite: 'none', // Prevent CSRF attacks
+    // });
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,     // Prevent access to the cookie from JavaScript
+      secure: false,       // Send the cookie over HTTPS only
+      sameSite: "lax",  // Prevent CSRF attacks
       maxAge: 3600000 * 24 * 30, // 1 hour
-      sameSite: 'none', // Prevent CSRF attacks
+      path: "/"
+    });
+    
+    res.cookie("idToken", accessToken, {
+      httpOnly: true,     // Prevent access to the cookie from JavaScript
+      secure: false,       // Send the cookie over HTTPS only
+      sameSite: "lax",  // Prevent CSRF attacks
+      maxAge: 3600000 * 24 * 30, // 1 hour
+      path: "/"
     });
 
-    res.cookie('idToken', auth0Response.id_token, {
-      httpOnly: true,
-      secure: false, // Ensure cookies are only sent over HTTPS
-      maxAge: 3600000 * 24 * 30, // 1 hour
-      sameSite: 'none', // Prevent CSRF attacks
-    });
+    // res.cookie('idToken', auth0Response.id_token, {
+    //   httpOnly: true,
+    //   secure: false, // Ensure cookies are only sent over HTTPS
+    //   maxAge: 3600000 * 24 * 30, // 1 hour
+    //   sameSite: 'none', // Prevent CSRF attacks
+    // });
 
     // Send successful response
     return utils.sendSuccess(res, 'Login successful', {
