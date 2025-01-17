@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "formik": "^2.4.6",
     "js-cookie": "^3.0.5",
+    "jspdf": "^2.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.4.1",

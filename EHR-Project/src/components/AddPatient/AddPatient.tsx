@@ -15,7 +15,7 @@ const AddPatientData: React.FC = () => {
       birth_date: '',
       address: '',
       national_id: '',
-      photo_url: '',
+      password: '',
       insurance_number: '',
       phone_number: '',
     },
@@ -59,7 +59,7 @@ const AddPatientData: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    navigate('/dashboard');
+    navigate('/DoctorDashboard');
   };
 
 return (
@@ -156,17 +156,14 @@ return (
                 />
               </div>
               <div>
-                <label htmlFor="photo_url" className="block text-sm font-medium text-gray-700">Photo URL</label>
-                <input
-                  type="url"
-                  name="photo_url"
-                  id="photo_url"
-                  placeholder="Photo URL"
-                  value={patient.user.photo_url}
-                  data-section="user"
-                  onChange={handleChange}
-                  className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
-                />
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password:</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      className="block w-full p-3 mt-1 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
+                      placeholder="********"
+                    />
               </div>
               <div>
                 <label htmlFor="insurance_number" className="block text-sm font-medium text-gray-700">Insurance Number</label>
@@ -303,6 +300,7 @@ return (
               <button
                 type="submit"
                 className="w-full px-4 py-3 text-white bg-[#415BE7] rounded-md hover:bg-[#263380] focus:ring-4 focus:ring-indigo-500"
+                onClick={handleSubmit}
               >
                 Add
               </button>

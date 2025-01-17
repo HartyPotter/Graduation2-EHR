@@ -38,6 +38,7 @@ function LoginForm() {
       if (role === "doctor") {
       const response = await api.post(API_ENDPOINTS.LOGIN_Doc, values);
       console.log(response);
+      console.log(response);
 
       if (response.status === 200 && response.data.data) {
 
@@ -45,8 +46,9 @@ function LoginForm() {
       }
         } else if (role === "patient") {
           const response = await api.post(API_ENDPOINTS.LOGIN_Patient, values);
-          console.log(response);
+
           if (response.status === 200 && response.data.data) {
+
 
     
            setTimeout(() => navigate("/PatientDashboard"), 1000);
