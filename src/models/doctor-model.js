@@ -19,15 +19,6 @@ Doctor.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    hospital_id:{
-      type: DataTypes.STRING,
-      allowNull: false,
-      references: {
-        model: 'hospitals',
-        key: 'id',
-      },
-      onDelete: 'CASCADE',
-    },
     gender: {
       type: DataTypes.ENUM('male', 'female'),
     },

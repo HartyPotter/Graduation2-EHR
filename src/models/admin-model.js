@@ -36,7 +36,6 @@ Admin.init(
                 key: 'id',
             },
             onDelete: 'CASCADE',
-            primaryKey: true,
         },
     },
     {
@@ -48,4 +47,4 @@ Admin.init(
     }
 )
 
-export default Admin;s
+export default Admin;

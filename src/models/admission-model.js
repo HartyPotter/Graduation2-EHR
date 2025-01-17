@@ -14,7 +14,7 @@ Admission.init(
             type: DataTypes.STRING,
             allowNull: false,
             references: {
-                model: 'Patients',
+                model: 'patients',
                 key: 'id',
             },
             onDelete: 'CASCADE',
@@ -24,7 +24,7 @@ Admission.init(
             type: DataTypes.STRING,
             allowNull: false,
             references: {
-                model: 'Doctors',
+                model: 'doctors',
                 key: 'id',
             },
             onDelete: 'CASCADE',
@@ -44,7 +44,7 @@ Admission.init(
             type: DataTypes.STRING,
             allowNull: false,
             references: {
-                model: 'hospital',
+                model: 'hospitals',
                 key: 'id',
             },
             onDelete: 'CASCADE',

@@ -12,13 +12,10 @@ import Admission from './admission-model.js';
 Patient.belongsToMany(Contact, { through: PatientContact, foreignKey: 'patient_id' });
 Contact.belongsToMany(Patient, { through: PatientContact, foreignKey: 'contact_id' });
 
-// Define one-to-many relationship
-Hospital.hasMany(Doctor, { foreignKey: 'hospital_id' });
-Hospital.hasMany(Admin, { foreignKey: 'id' });
+Hospital.belongsToMany(Doctor, { through: HospitalDoctor, foreignKey: 'hospital_id' });
+Doctor.belongsToMany(Hospital, { through: HospitalDoctor, foreignKey: 'doctor_id' });
 
-// Define one-to-one relationship
-Admission.hasOne(Patient, { foreignKey: 'id' });
-Admission.hasOne(Doctor, { foreignKey: 'id' });
-Admission.hasOne(Admin, { foreignKey: 'id' });
+// Define one-to-many relationship
+Hospital.hasMany(Admin, { foreignKey: 'id' });
 
 export { Patient, Doctor, Token, Contact, PatientContact, Log };
