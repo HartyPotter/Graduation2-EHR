@@ -19,30 +19,25 @@ const PastExaminations: React.FC = () => {
   const userId = 1;
 
   useEffect(() => {
-    const fetchExaminations = async () => {
-      setLoading(true);
-      try {
-        // const response = await axios.get("#");
-        // setExaminations(response.data);
+  const fetchExaminations = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("http://localhost:3001/api/patient/visits", {
+        withCredentials: true
+      });
+      setExaminations(response.data);
+    } catch (error) {
+      setError('Failedddd');
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const mockData = [
-          {
-            id: 1,
-            type: '25 Dec',
-            date: new Date(452455555845), 
-            doctor: 'Completed',
-          },
-        ];
-        setExaminations(mockData);
-      } catch (err) {
-        setError('Failed to load examinations');
-      } finally {
-        setLoading(false);
-      }
-    };
+  fetchExaminations();
+}, []); // Ensure userId is used if it's dynamic or essential for fetching data.
 
-    fetchExaminations();
-  }, [userId]);
 
   const indexOfLastExamination = currentPage * examinationsPerPage;
   const indexOfFirstExamination = indexOfLastExamination - examinationsPerPage;
@@ -108,12 +103,12 @@ const PastExaminations: React.FC = () => {
                   <td className="border-b py-2">{exam.date.toLocaleDateString()}</td>
                   <td className="border-b py-2">{exam.doctor}</td>
                   <td className="border-b py-2">
-                    <NavLink
-                      to={`/examinations/${exam.id}`}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg border border-black hover:bg-green-600"
-                    >
+                  <NavLink
+                    to="/ExaminationsDetails"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg border border-black hover:bg-green-700">
                       Explore
-                    </NavLink>
+                  </NavLink>
+
                   </td>
                 </tr>
               ))}

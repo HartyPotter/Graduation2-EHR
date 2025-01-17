@@ -37,23 +37,20 @@ function LoginForm() {
       console.log(values);
       if (role === "doctor") {
       const response = await api.post(API_ENDPOINTS.LOGIN_Doc, values);
+      console.log(response);
 
       if (response.status === 200 && response.data.data) {
-        Cookies.set("accessToken", response.data.data.accessToken, { expires: 7, secure: true });
-        Cookies.set("refreshToken", response.data.data.refreshToken, { expires: 30, secure: true });
 
-        toast.success("Login successful!");
-        navigate("/DoctorDashboard");
+        setTimeout(() => navigate("/DoctorDashboard"), 1000);
       }
         } else if (role === "patient") {
           const response = await api.post(API_ENDPOINTS.LOGIN_Patient, values);
-
+          console.log(response);
           if (response.status === 200 && response.data.data) {
-            Cookies.set("accessToken", response.data.data.accessToken, { expires: 7, secure: true });
-            Cookies.set("refreshToken", response.data.data.refreshToken, { expires: 30, secure: true });
+
     
-            toast.success("Login successful!");
-            navigate("/PatientDashboard");
+           setTimeout(() => navigate("/PatientDashboard"), 1000);
+            // setTimeout(, 3000);
         }
       } else {
         throw new Error("Invalid response format.");

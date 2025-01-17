@@ -6,7 +6,7 @@ const PatientNavbar: React.FC = () => (
 <nav className="flex justify-start items-center p-4 border-b border-gray-200">
   <div className="text-blue-600 font-bold text-lg mr-8">EHR PROJECT</div>
     <div className="flex space-x-6">
-      <NavLink to="#" className="text-gray-700 hover:text-blue-600">
+      <NavLink to="/History" className="text-gray-700 hover:text-blue-600">
         History
       </NavLink>
       <NavLink to="#" className="text-gray-700 hover:text-blue-600">
