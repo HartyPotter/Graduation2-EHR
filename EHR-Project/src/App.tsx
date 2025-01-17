@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import LoginForm from "./components/login/Login";
 import Register from "./components/register/register";
@@ -12,6 +11,9 @@ import RequestAddition from "./components/PatientPages/RequestAddition"
 import ExaminationsDetails from "./components/PatientPages/ExaminationsDetails"
 import History from "./components/PatientPages/History"
 import AiHistory from "./components/History/AiHistory";
+import Patients from "./components/AddPatient/Patients";
+import AddPatient from "./components/AddPatient/AddPatient";
+import PatientTable from "./components/DoctorView/PatientTable";
 function App() {
   return (
     <Routes>
@@ -24,8 +26,10 @@ function App() {
       <Route path="/PastExaminations" element={<PrivateRoute element={<PastExaminations />} />} />
       <Route path="/TestsAndXrays" element={<PrivateRoute element={<TestsAndXrays />} />} />
       <Route path="/RequestAddition" element={<PrivateRoute element={<RequestAddition />} />} />
+      <Route path="/patients" element={<Patients />} />
+      <Route path="/add-patient" element={<AddPatient />} />
+      <Route path="/patient-table" element={<PatientTable />} />
       <Route path="/AiHistory" element={<PrivateRoute element={<AiHistory />} />} />
-
       <Route path="/ExaminationsDetails" element={<PrivateRoute element={<ExaminationsDetails />} />} />
       <Route path="/History" element={<PrivateRoute element={<History />} />} />
       <Route path="*" element={<div>Page Not Found</div>} />

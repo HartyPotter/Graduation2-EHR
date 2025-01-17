@@ -8,6 +8,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
   const accessToken = Cookies.get("accessToken");
+  console.log("Access Token in PrivateRoute:", accessToken);
 
   // If there is no accessToken, redirect to login
   if (!accessToken) {
