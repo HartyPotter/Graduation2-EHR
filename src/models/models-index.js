@@ -6,7 +6,7 @@ import Contact from './emergency-contact-model.js';
 import PatientContact from './patient-contact-model.js';
 import Hospital from './hospital-model.js';
 import Admin from './admin-model.js';
-import Admission from './admission-model.js';
+import HospitalDoctor from './hospital-doctor-model.js';
 
 // Define many-to-many relationship
 Patient.belongsToMany(Contact, { through: PatientContact, foreignKey: 'patient_id' });
