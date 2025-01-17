@@ -42,15 +42,15 @@ import {
   // updateCondition,
   // deleteCondition
 } from '../controllers/condition/index.js';
-import { authAccessToken } from '../middleware/auth-middleware.js';
-import { authorizeUser } from '../middleware/access-middleware.js';
+import { authenticate } from '../middleware/auth-middleware.js';
+// import { authorizeUser } from '../middleware/access-middleware.js';
 
 const router = express.Router();
 
 // ---------------------- Medical Records ---------------------- //
 router.post(
   '/medical-records',
-  authAccessToken,
+  authenticate,
   // authorizeUser('createRecord'),
   createRecord
 );
@@ -71,7 +71,7 @@ router.delete(
 // ---------------------- Visit routes ---------------------- //
 router.post(
   '/visits',
-  authAccessToken,
+  authenticate,
   // authorize(RecordAuthorization.createVisit),
   createVisit
 );
@@ -84,7 +84,7 @@ router.get(
 
 router.get(
   '/visits',
-  authAccessToken,
+  authenticate,
   // authorize(RecordAuthorization.getAllVisits),
   getAllVisits
 );
