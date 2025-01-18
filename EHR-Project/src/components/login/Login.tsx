@@ -12,8 +12,8 @@ interface LoginFormInputs {
 }
 
 const API_ENDPOINTS = {
-  LOGIN_Doc: "/api/doctor/login",
-  LOGIN_Patient: "/api/patient/login",
+  LOGIN_Doc: "/api/user/doctor/login",
+  LOGIN_Patient: "/api/user/patient/login",
 };
 
 const validationSchema = Yup.object().shape({
@@ -43,7 +43,8 @@ function LoginForm() {
 
 
         toast.success("Login successful!");
-        navigate("/DoctorDashboard");
+        // navigate("/DoctorDashboard");
+        navigate("/register");
       }
         } else if (role === "patient") {
           const response = await api.post(API_ENDPOINTS.LOGIN_Patient, values);
@@ -53,7 +54,8 @@ function LoginForm() {
 
     
             toast.success("Login successful!");
-            navigate("/PatientDashboard");
+            navigate("/register");
+            // navigate("/PatientDashboard");
         }
       } else {
         throw new Error("Invalid response format.");
