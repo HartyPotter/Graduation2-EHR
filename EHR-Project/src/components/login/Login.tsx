@@ -39,22 +39,16 @@
     
         if (role === "doctor") {
           response = await api.post(API_ENDPOINTS.LOGIN_Doc, values);
-          console.log("Doctor login response:", response);
     
           if (response.status === 200 && response.data.data) {
-            Cookies.set("accessToken", response.data.data.accessToken, { expires: 1 }); // Set token in cookies
             toast.success("Login successful!");
-            console.log("Navigating to DoctorDashboard...");
             navigate("/DoctorDashboard");
           }
         } else if (role === "patient") {
           response = await api.post(API_ENDPOINTS.LOGIN_Patient, values);
-          console.log("Patient login response:", response);
     
           if (response.status === 200 && response.data.data) {
-            Cookies.set("accessToken", response.data.data.accessToken, { expires: 1 }); // Set token in cookies
             toast.success("Login successful!");
-            console.log("Navigating to PatientDashboard...");
             navigate("/PatientDashboard");
           }
         } else {
