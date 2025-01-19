@@ -42,7 +42,7 @@ import {
   // updateCondition,
   // deleteCondition
 } from '../controllers/condition/index.js';
-import { authenticate } from '../middleware/auth-middleware.js';
+import { authAccessToken, authenticate } from '../middleware/auth-middleware.js';
 // import { authorizeUser } from '../middleware/access-middleware.js';
 
 const router = express.Router();
@@ -131,6 +131,14 @@ router.post(
   '/conditions',
   createCondition
 );
+
+router.get(
+  '/check-authentication',
+  authAccessToken,
+  (req, res) => {
+    res.send({"authenticated": true});
+  }
+)
 
 // router.get('/conditions', getAllConditions);
 // router.get('/conditions/:id', getCondition);

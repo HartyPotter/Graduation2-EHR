@@ -25,7 +25,7 @@ export const dbUri = DB_URI;
 // export const awsSecretAccessKey = AWS_SECRET_ACCESS_KEY;
 // export const awsRegion = AWS_REGION;
 // export const bucketName = BUCKET_NAME;
-export const prefix = '/api';
+export const prefix = '/api/records';
 export const specs = '/docs';
 
 // AUTH0
