@@ -12,5 +12,5 @@ export { changePassword } from './change-password.js'
 export { default as editPatient } from './patient/edit-patient.js'
 
 // // OTHER
-export { default as getPatient } from './patient/get-patient.js'
+export { getUser } from './get-user.js'
 export { default as deletePatient } from './patient/delete-patient.js'

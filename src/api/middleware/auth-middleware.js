@@ -5,4 +5,5 @@ import { auth0_audience, auth0_domain } from '../../config/config.js';
 export const authAccessToken = auth({
   audience: auth0_audience,
   issuerBaseURL: `https://${auth0_domain}`,
+  tokenSigningAlg: 'RS256'
 });

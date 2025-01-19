@@ -7,7 +7,7 @@ const PatientContact = sequelize.define(
     patient_id: {
       type: DataTypes.STRING,
       references: {
-        model: 'Patients',
+        model: 'patients',
         key: 'id',
       },
       primaryKey: true,
@@ -16,7 +16,7 @@ const PatientContact = sequelize.define(
     contact_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Contacts',
+        model: 'contacts',
         key: 'id',
       },
       primaryKey: true,
