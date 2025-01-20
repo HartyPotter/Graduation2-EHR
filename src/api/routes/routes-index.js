@@ -22,7 +22,7 @@ router.use('/doctor', doctorRouter);
 
 router.get('/profile', authAccessToken, (req, res) => {
     console.log(req.auth.payload);
-    getUser();
+    getUser(req, res);
 });
 
 router.get('/test-error', (req, res, next) => {

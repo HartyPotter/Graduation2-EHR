@@ -22,7 +22,7 @@ export const login = async (req, res) => {
     const { data: auth0Response } = await utils.auth0Authentication.oauth.passwordGrant({
       username: email,
       password,
-      // audience: auth0_audience,
+      audience: auth0_audience,
       scope: 'openid profile email',
       connection: 'Username-Password-Authentication', // Add this line
     });
@@ -57,7 +57,7 @@ export const login = async (req, res) => {
 
     // Cache user info and refresh token in Redis
     await redisClient.hSet(`user:${user.id}`, {
-      user: JSON.stringify(user),
+      user: JSON.stringify({ role, ...user }),
       id_token: auth0Response.id_token,
     });
 
@@ -96,7 +96,7 @@ export const login = async (req, res) => {
 
     // Send successful response
     return utils.sendSuccess(res, 'Login successful', {
-      user,
+      user: { role, ...user },
       idToken: auth0Response.id_token,
       accessToken: auth0Response.access_token,
     });
