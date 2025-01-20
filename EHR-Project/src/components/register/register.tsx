@@ -4,6 +4,8 @@ import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 import Cookies from "js-cookie";
 import * as Yup from "yup";
+import { useAuth0 } from '@auth0/auth0-react';
+import { Navigate } from 'react-router-dom';
 
 
 // Create an instance of axios for API requests
@@ -41,6 +43,16 @@ const patientValidationSchema = Yup.object({
 });
 
 const Register = () => {
+  const { isAuthenticated, isLoading } = useAuth0();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+  
   const [role, setRole] = useState("Doctor");
   const navigate = useNavigate();
 
