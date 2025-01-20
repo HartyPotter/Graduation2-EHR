@@ -22,15 +22,15 @@ export const login = async (req, res) => {
     const { data: auth0Response } = await utils.auth0Authentication.oauth.passwordGrant({
       username: email,
       password,
-      // audience: auth0_audience,
+      audience: auth0_audience,
       scope: 'openid profile email',
       connection: 'Username-Password-Authentication', // Add this line
     });
 
-    console.log('Auth0 response:', auth0Response);
+    // console.log('Auth0 response:', auth0Response);
     
     // Find user in the database
-    const user = role === 'doctor'
+    const {dataValues: user} = role === 'doctor'
       ? await Doctor.findOne({ where: { email } })
       : await Patient.findOne({ where: { email } });
     if (!user) {
@@ -57,19 +57,11 @@ export const login = async (req, res) => {
 
     // Cache user info and refresh token in Redis
     await redisClient.hSet(`user:${user.id}`, {
-      user: JSON.stringify(user),
+      user: JSON.stringify({ ...user, role }),
       id_token: auth0Response.id_token,
     });
 
     await redisClient.expire(`user:${user.id}`, 2592000); // 30 days
-
-    // Set access and ID tokens as secure, HttpOnly cookies
-    // res.cookie('accessToken', auth0Response.access_token, {
-    //   httpOnly: true,
-    //   secure: false, // Ensure cookies are only sent over HTTPS
-    //   maxAge: 3600000 * 24 * 30, // 1 hour
-    //   sameSite: 'none', // Prevent CSRF attacks
-    // });
 
     res.cookie("accessToken", auth0Response.access_token, {
       httpOnly: true,     // Prevent access to the cookie from JavaScript
@@ -87,16 +79,9 @@ export const login = async (req, res) => {
       path: "/"
     });
 
-    // res.cookie('idToken', auth0Response.id_token, {
-    //   httpOnly: true,
-    //   secure: false, // Ensure cookies are only sent over HTTPS
-    //   maxAge: 3600000 * 24 * 30, // 1 hour
-    //   sameSite: 'none', // Prevent CSRF attacks
-    // });
-
     // Send successful response
     return utils.sendSuccess(res, 'Login successful', {
-      user,
+      user: { role, ...user },
       idToken: auth0Response.id_token,
       accessToken: auth0Response.access_token,
     });

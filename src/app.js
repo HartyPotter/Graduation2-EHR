@@ -12,7 +12,7 @@ app.listen(port, err => {
     process.exit(1);
   }
   console.log(`Server is running on ${port}`);
-  console.log(`IMAGE WITH REDIS IN ENV`);
+  console.log(`Final User Service`);
 });
 
 export default app

@@ -7,7 +7,10 @@ import doctorRouter from './doctor-route.js';
 import adminRouter from './admin-route.js';
 import { createHospital } from '../controllers/hospital-controller.js';
 
+import { authAccessToken } from '../middleware/auth-middleware.js';
+import { getUser } from '../controllers/patient-controller-index.js';
 const router = Router();
+
 
 const specDoc = swaggerJsdoc(swaggerConfig);
 
@@ -24,6 +27,11 @@ router.use('/doctor', doctorRouter);
 
 // Admin Routes
 router.use('/admin', adminRouter);
+
+router.get('/profile', authAccessToken, (req, res) => {
+    console.log(req);
+    getUser(req, res);
+});
 
 router.get('/test-error', (req, res, next) => {
     const error = new Error('Test Error');

@@ -3,8 +3,8 @@ import axios from 'axios';
 export async function createMedicalRecord(medicalRecord) {
     try {
         const response = await axios.post(
-        'http://patient-records-service.default.svc.cluster.local:80/api/patient/medical-records',
-        // 'http://localhost:3001/api/patient/medical-records',
+        // 'http://patient-records-service.default.svc.cluster.local:80/api/patient/medical-records',
+        'http://localhost:3001/api/records/patient/medical-records',
         medicalRecord
         );
         if (response.status === 201) return true;

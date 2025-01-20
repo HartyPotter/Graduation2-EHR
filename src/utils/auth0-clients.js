@@ -9,7 +9,7 @@ export const auth0Management = new ManagementClient({
     domain: auth0_domain,
     clientId: client_id,
     clientSecret: client_secret,
-    // scope: 'create:users read:users update:users delete:users',
+    scope: 'create:users read:users update:users delete:users',
   });
   
 
