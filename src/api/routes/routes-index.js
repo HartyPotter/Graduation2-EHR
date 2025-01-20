@@ -21,7 +21,7 @@ router.use('/patient', patientRouter);
 router.use('/doctor', doctorRouter);
 
 router.get('/profile', authAccessToken, (req, res) => {
-    console.log(req.auth.payload);
+    console.log(req);
     getUser(req, res);
 });
 
