@@ -6,17 +6,28 @@ import { useUser } from "../UserContext"; // Import useUser
 
 interface PrivateRouteProps {
   element: JSX.Element;
+  allowedRoles: string[]; // Change allowedRoles to an array of strings
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
-  const { isAuthenticated, isLoading: auth0Loading } = useAuth0();
-  const { isLoading: userLoading } = useUser(); // Use loading state from UserContext
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles, element }) => {
+  // const { isAuthenticated, isLoading: auth0Loading } = useAuth0();
+  const { user, isLoading: userLoading } = useUser(); // Use user and loading state from UserContext
 
-  if (auth0Loading || userLoading) {
-    return <div>Loading...</div>;
+  if (userLoading) {
+    return <div>Loading...</div>; // Show loading indicator while checking authentication
   }
 
-  return isAuthenticated ? element : <Navigate to="/login" />;
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Redirect to unauthorized if user role is not allowed
+  if (!allowedRoles.includes(user.role)) {
+    return <Navigate to="/not-authorized" replace />;
+  }
+
+  return element;
 };
 
 export default PrivateRoute;

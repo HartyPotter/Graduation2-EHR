@@ -8,12 +8,9 @@ interface RoleBasedRouteProps {
 }
 
 const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({ element, allowedRoles }) => {
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
   console.log("User in RoleBasedRoute:", user);
   // If the authentication state is still loading, show a loading spinner or message
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   // If the user is not logged in, redirect to login
   if (!user) {
@@ -21,7 +18,7 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({ element, allowedRoles }
   }
 
   // If the user's role is not allowed, redirect to a "not authorized" page or home
-  if (allowedRoles !== user.role) {
+  if (!allowedRoles.includes(user.role)) {
     return <Navigate to="/not-authorized" />;
   }
 

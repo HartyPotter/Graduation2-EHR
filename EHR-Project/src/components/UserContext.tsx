@@ -1,6 +1,8 @@
-// src/contexts/UserContext.tsx
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom'; // Add useLocation
+import axios from 'axios';
+// import { useAuth0 } from '@auth0/auth0-react';
+import Cookies from 'js-cookie';
 
 interface User {
   name: string;
@@ -11,52 +13,86 @@ interface User {
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
-  isLoading: boolean;
+  logout: () => Promise<void>;
+  isLoading: boolean; // Add isLoading state
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, user: auth0User, isLoading: auth0Loading } = useAuth0();
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  // const { logout: auth0Logout } = useAuth0(); // Use Auth0 logout if integrated
+  const navigate = useNavigate();
+  const location = useLocation(); // Get the current route
 
-  // Load user data from local storage on initial load
+  // Define public routes
+  const publicRoutes = ['/', '/login', '/register'];
+
+  // Load user data from the server on initial load
   useEffect(() => {
+    const checkLoggedInUser = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/user/profile', {
+          withCredentials: true,
+        });
+        if (response.status === 200) {
+          console.log("Response:", response.data);
+          const userData = {
+            name: response.data.data.user.full_name,
+            email: response.data.data.user.email,
+            role: response.data.data.user.role,
+          };
+          setUser(userData); // Set the user if a valid session exists
+          localStorage.setItem('user', JSON.stringify(userData));
+        }
+      } catch (error) {
+        setUser(null); // No user session exists, reset the user
+        localStorage.removeItem('user'); // Remove user from local storage
+        console.error('Error fetching user session:', error);
+      } finally {
+        setIsLoading(false); // Set loading to false after the request completes
+      }
+    };
+
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUser)); // Set the user from local storage
+      checkLoggedInUser(); // Always check if the user is logged in on the server
+    } else if (!publicRoutes.includes(location.pathname)) {
+      // Redirect to login only if the current route is not a public route
+      navigate('/login');
     }
-    setIsLoading(auth0Loading);
-  }, [auth0Loading]);
+  }, [navigate, location.pathname]); // Add location.pathname to dependencies
 
-  // Save user data to local storage whenever it changes
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [user]);
+  // Logout function
+  const logout = useCallback(async () => {
+    try {
+      Cookies.remove('accessToken', { path: '/', domain: 'localhost' });
+      Cookies.remove('idToken', { path: '/', domain: 'localhost' });
 
-  // Update user state when authentication state changes
-  useEffect(() => {
-    if (isAuthenticated && auth0User) {
-      const role = auth0User['https://your-app/roles']?.[0] || 'patient'; // Default role
-      console.log("Auth0 role:" ,auth0User['https://your-app/roles']?.[0])
-      const newUser = {
-        name: auth0User.nickname || '',
-        email: auth0User.email || '',
-        role: role,
-      };
-      setUser(newUser);
-    } else {
-      setUser(null);
+      localStorage.removeItem('user'); // Remove user from local storage
+      setUser(null); // Clear the user state
+
+      // Call Auth0 logout with a custom redirect URL
+      // auth0Logout?.({ returnTo: window.location.origin });
+
+      navigate('/'); // Redirect to the home page
+    } catch (error) {
+      console.error('Logout failed:', error);
     }
-  }, [isAuthenticated, auth0User]);
+  }, [navigate]);
+
+  // Context value
+  const value = {
+    user,
+    setUser,
+    logout,
+    isLoading, // Include isLoading in the context value
+  };
 
   return (
-    <UserContext.Provider value={{ user, setUser, isLoading }}>
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );

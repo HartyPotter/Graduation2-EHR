@@ -1,15 +1,9 @@
 import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { NavLink } from 'react-router-dom';
-import { useUser } from '../UserContext';
+import { useUser } from '../UserContext'; // Adjust the import path as needed
 
 const LandingPage: React.FC = () => {
-  const { isAuthenticated, logout, isLoading: authLoading } = useAuth0();
-  const { user, isLoading: userLoading } = useUser();
-
-  if (authLoading || userLoading) {
-    return <div>Loading...</div>;
-  }
+  const { user, logout } = useUser(); // Destructure user and logout from useUser
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
@@ -18,11 +12,11 @@ const LandingPage: React.FC = () => {
         <p className="text-xl mb-8">Your trusted electronic health record system</p>
 
         {/* Display username and logout button if authenticated */}
-        {isAuthenticated && user && (
+        {user && (
           <div className="mb-8">
             <p className="text-lg">Welcome, {user.name}!</p>
             <button
-              onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+              onClick={logout} // Use the logout function from UserContext
               className="mt-4 px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition duration-300"
             >
               Logout
@@ -31,7 +25,7 @@ const LandingPage: React.FC = () => {
         )}
 
         {/* Show login and register buttons if not authenticated */}
-        {!isAuthenticated && (
+        {!user && (
           <div className="space-x-4">
             <NavLink
               to="/login"

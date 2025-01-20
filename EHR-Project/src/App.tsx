@@ -16,28 +16,34 @@ import AddPatient from "./components/AddPatient/AddPatient";
 import PatientTable from "./components/DoctorView/PatientTable";
 import LandingPage from "./components/LandingPage/LandingPage"; // Import the new LandingPage component
 import Callback from "./components/Callback"; // Import the new Callback component
+import { useUser } from "./components/UserContext"; // Import the useUser hook
+import NotAuthorized from "./components/NotAuthorized";
 
 function App() {
+  const {user} = useUser(); // Get the user and setUser from the UserContext
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       {/* <Route path="/" element={<Navigate to="/login" />} /> */}
       <Route path="/callback" element={<Callback />} /> {/* Add the callback route */}
       <Route path="/login" element={<LoginForm />} />
+      {/* <Route path="/logout" element={<LogoutForm />} /> */}
       <Route path="/register" element={<Register />} />
-      <Route path="/DoctorDashboard" element={<PrivateRoute element={<DoctorDashboard />} />}/>
-      <Route path="/AddPatient" element={<PrivateRoute element={<AddPatientdata />} />} />
-      <Route path="/PatientDashboard" element={<PrivateRoute element={<PatientDashboard />} />} />
-      <Route path="/PastExaminations" element={<PrivateRoute element={<PastExaminations />} />} />
-      <Route path="/TestsAndXrays" element={<PrivateRoute element={<TestsAndXrays />} />} />
-      <Route path="/RequestAddition" element={<PrivateRoute element={<RequestAddition />} />} />
+      <Route path="/DoctorDashboard" element={<PrivateRoute element={<DoctorDashboard />} allowedRoles={['doctor']} />}/>
+      <Route path="/AddPatient" element={<PrivateRoute element={<AddPatientdata />} allowedRoles={['doctor']} />} />
+      <Route path="/PatientDashboard" element={<PatientDashboard />} />
+      <Route path="/PastExaminations" element={<PrivateRoute element={<PastExaminations />} allowedRoles={['doctor', 'patient']} />} />
+      <Route path="/TestsAndXrays" element={<PrivateRoute element={<TestsAndXrays />} allowedRoles={['doctor', 'patient']} />} />
+      <Route path="/RequestAddition" element={<PrivateRoute element={<RequestAddition />} allowedRoles={['patient']} />} />
       <Route path="/patients" element={<Patients />} />
       <Route path="/add-patient" element={<AddPatient />} />
       <Route path="/patient-table" element={<PatientTable />} />
-      <Route path="/AiHistory" element={<PrivateRoute element={<AiHistory />} />} />
-      <Route path="/ExaminationsDetails" element={<PrivateRoute element={<ExaminationsDetails />} />} />
-      <Route path="/History" element={<PrivateRoute element={<History />} />} />
+      <Route path="/AiHistory" element={<PrivateRoute element={<AiHistory />} allowedRoles={['doctor']} />} />
+      <Route path="/ExaminationsDetails" element={<PrivateRoute element={<ExaminationsDetails />} allowedRoles={['doctor']} />} />
+      <Route path="/History" element={<PrivateRoute element={<History />} allowedRoles={['doctor']} />} />
       <Route path="*" element={<div>Page Not Found</div>} />
+      <Route path="/not-authorized" element={<NotAuthorized />} />
     </Routes>
   );
 }
